@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('pengguna', function (Blueprint $table) {
             $table->id();
             $table->string('username')->unique();
+            $table->string('email')->unique();
             $table->string('password');
-            $table->enum ('role', ['pegawai', 'verifikator', 'inspektorat']);
+            $table->enum ('role', ['pengguna', 'verifikator', 'inspektorat']);
             $table->rememberToken();
 
             $table->string('pegawai_nip')->nullable();
-            $table->foreign('pegawai_nip')->references('nip')->on('pegawai');
+            $table->foreign('pegawai_nip')->references('nip')->on('pegawai')->nullOnDelete();
 
             $table->timestamps();
             $table->softDeletes();
