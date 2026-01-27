@@ -10,6 +10,9 @@ class PegawaiSeeder extends Seeder
 {
     public function run(): void
     {
+
+        DB::table('pegawai')->delete();
+
         DB::table('pegawai')->insert([
             [
                 'nip' => '198501012010011001',

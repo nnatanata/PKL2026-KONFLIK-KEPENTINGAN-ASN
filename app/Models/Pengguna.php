@@ -27,10 +27,10 @@ class Pengguna extends Authenticatable
         'remember_token',
     ];
 
-    public function getAuthIdentifierName()
-    {
-        return 'username';
-    }
+    // public function getAuthIdentifierName()
+    // {
+    //     return 'username';
+    // }
 
     public function pegawai()
     {

@@ -10,40 +10,40 @@ class PenggunaSeeder extends Seeder
 {
     public function run(): void
     {
-        Pengguna::updateOrCreate(
+        Pengguna::updateOrInsert(
             ['username' => 'budisantoso'],
             [
-                'email' => '999shofi888@gmail.com',
+                'email' => 'yutgoryos@gmail.com',
                 'password' => Hash::make('password123'),
                 'role' => 'pengguna',
                 'pegawai_nip' => '198501012010011001',
             ]
         );
 
-        Pengguna::updateOrCreate(
+        Pengguna::updateOrInsert(
             ['username' => 'risnawati'],
             [
-                'email' => '99shofi88@gmail.com',
+                'email' => 'ryujisupremacy@gmail.com',
                 'password' => Hash::make('password123'),
                 'role' => 'pengguna',
                 'pegawai_nip' => '198101012010011001',
             ]
         );
 
-        Pengguna::updateOrCreate(
+        Pengguna::updateOrInsert(
             ['username' => 'sitiaminah'],
             [
-                'email' => 'fairuzydafameidha@gmail.com',
+                'email' => 'yutogoryos@gmail.com',
                 'password' => Hash::make('password123'),
                 'role' => 'verifikator',
                 'pegawai_nip' => '197912122005021002',
             ]
         );
 
-        Pengguna::updateOrCreate(
+        Pengguna::updateOrInsert(
             ['username' => 'ahmadfauzan'],
             [
-                'email' => 'shofirnata26@gmail.com',
+                'email' => 'tsurayaolivia@gmail.com',
                 'password' => Hash::make('password123'),
                 'role' => 'inspektorat',
                 'pegawai_nip' => '197505052003031003',
