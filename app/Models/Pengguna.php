@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\ResetPasswordCustom;
 
 class Pengguna extends Authenticatable
 {
@@ -44,5 +45,10 @@ class Pengguna extends Authenticatable
     public function laporanPotensial()
     {
         return $this->hasMany(LaporanPotensial::class, 'pengguna_id');
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordCustom($token));
     }
 }
