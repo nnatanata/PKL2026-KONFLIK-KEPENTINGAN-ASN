@@ -5,10 +5,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\User\DashboardController as UserDashboardController;
 
 /*root
 belum login ke halaman login
 sudah login ke halaman dashboard*/
+
 Route::get('/', function () {
     return auth()->check()
         ? redirect('/dashboard')
@@ -76,17 +78,20 @@ Route::middleware('auth')->group(function () {
 
         $user = auth()->user();
 
-        //inspektorat dan verifikator diarahkan ke admin dashboard
-        if ($user->role === 'inspektorat' || $user->role === 'verifikator') {
+        // admin
+        if (in_array($user->role, ['inspektorat', 'verifikator'])) {
             return view('admin.dashboard');
         }
 
-        //pengguna ke user dashboard
         if ($user->role === 'pengguna') {
-            return view('user.dashboard');
+            return app(UserDashboardController::class)->index();
         }
 
         abort(403, 'Role tidak dikenali');
-    });
+    })->name('user.dashboard');
+
 });
+
+
+
 
