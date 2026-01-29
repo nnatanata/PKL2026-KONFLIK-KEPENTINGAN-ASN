@@ -126,8 +126,7 @@
 
 <div class="login-box">
     <div class="login-header">
-        {{-- <h2>SIMAKK ASN</h2> --}}
-        {{-- <p>Reset Password Akun Anda</p> --}}
+        
     </div>
 
     @if (session('status'))

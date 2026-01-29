@@ -76,7 +76,7 @@
 
         .btn-login {
             width: 100%;
-            background-color: #B11226; /* merah BRIN */
+            background-color: #b11217;
             color: #ffffff;
             border: none;
             padding: 12px;
