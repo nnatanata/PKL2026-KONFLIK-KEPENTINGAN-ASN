@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
+use App\Http\Controllers\User\PelaporanPotensialController;
+use App\Http\Controllers\User\PelaporanAktualController;
 
 /*root
 belum login ke halaman login
@@ -71,14 +73,15 @@ Route::middleware('guest')->group(function () {
 //auth (sudah login)
 Route::middleware('auth')->group(function () {
 
+    // logout
     Route::post('/logout', [LoginController::class, 'logout'])
         ->name('logout');
 
+    // dashboard
     Route::get('/dashboard', function () {
 
         $user = auth()->user();
 
-        // admin
         if (in_array($user->role, ['inspektorat', 'verifikator'])) {
             return view('admin.dashboard');
         }
@@ -90,8 +93,27 @@ Route::middleware('auth')->group(function () {
         abort(403, 'Role tidak dikenali');
     })->name('user.dashboard');
 
+    Route::get(
+        '/pelaporan/potensial/create',
+        [PelaporanPotensialController::class, 'create']
+    )->name('pelaporan.potensial.create');
+
+    Route::post(
+        '/pelaporan/potensial',
+        [PelaporanPotensialController::class, 'store']
+    )->name('pelaporan.potensial.store');
+
+    Route::get(
+        '/pelaporan/aktual/create',
+        [PelaporanAktualController::class, 'create']
+    )->name('pelaporan.aktual.create');
+
+    // ajax search pegawai
+    Route::get(
+        '/pegawai/search',
+        [PelaporanPotensialController::class, 'searchPegawai']
+    )->name('pegawai.search');
+
 });
-
-
 
 

@@ -14,10 +14,9 @@
         }
 
         body {
-            background-color: #ffffff; 
+            background-color: #ffffff;
         }
 
-        /* navbar */
         .navbar {
             background-color: var(--brin-red);
         }
@@ -34,8 +33,23 @@
             border-bottom: 2px solid #ffffff;
         }
 
+        .navbar-nav .nav-item {
+            margin: 0 10px;
+        }
+
         .dropdown-menu {
+            opacity: 0;
+            transform: translateY(10px);
+            visibility: hidden;
+            transition: all 0.25s ease;
+            display: block;
             border-top: 3px solid var(--brin-maroon);
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
         }
 
         .dropdown-item:hover {
@@ -47,7 +61,17 @@
             color: var(--brin-maroon);
         }
 
-        /* card box */
+        .lihat-semua {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .lihat-semua:hover {
+            color: #000000;
+            text-decoration: underline;
+        }
+
         .card-box {
             background-color: #ffffff;
             border-radius: 12px;
@@ -62,7 +86,6 @@
             color: var(--brin-red);
         }
 
-        /* status card */
         .status-card {
             background-color: #ffffff;
             border-radius: 12px;
@@ -72,7 +95,6 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
-        /* news card */
         .news-card {
             background-color: #ffffff;
             border-radius: 12px;
@@ -88,77 +110,14 @@
             border-radius: 8px;
             margin-bottom: 10px;
         }
-
-        a {
-            color: var(--brin-red);
-        }
-
-        a:hover {
-            color: var(--brin-maroon);
-        }
-
-        .dropdown:hover .dropdown-menu {
-            display: block;
-        }
     </style>
 </head>
 <body>
 
-<!-- navbar -->
-<nav class="navbar navbar-expand-lg fixed-top shadow-sm">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ route('user.dashboard') }}">
-            SIMAKK ASN
-        </a>
-
-        <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="{{ route('user.dashboard') }}">
-                        Beranda
-                    </a>
-                </li>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#">
-                        Pelaporan
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" href="#">
-                                Pelaporan Potensial
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="#">
-                                Pelaporan Aktual
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        Panduan
-                    </a>
-                </li>
-            </ul>
-
-            <span class="navbar-text">
-                Halo, {{ auth()->user()->nama ?? 'Pengguna' }}
-            </span>
-        </div>
-    </div>
-</nav>
-
+@include('partials.navbar-user')
 
 <div class="container" style="margin-top: 100px;">
 
-    <!-- total laporan -->
     <h5 class="fw-bold mb-3">Total Pelaporan</h5>
     <div class="row g-3 mb-5">
         <div class="col-md-4">
@@ -183,10 +142,9 @@
         </div>
     </div>
 
-    <!-- status terbaru -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="fw-bold">Status Terbaru</h5>
-        <a href="#" class="text-decoration-none">Lihat Semua ›</a>
+        <a href="#" class="lihat-semua">Lihat Semua ›</a>
     </div>
 
     <div class="row g-3 mb-5">
@@ -196,33 +154,24 @@
                     <h6>{{ $laporan->judul }}</h6>
 
                     @if ($laporan->status === 'Diproses')
-                        <span class="badge bg-warning text-dark">
-                            Diproses
-                        </span>
+                        <span class="badge bg-warning text-dark">Diproses</span>
                     @elseif ($laporan->status === 'Diterima')
-                        <span class="badge bg-success">
-                            Diterima
-                        </span>
+                        <span class="badge bg-success">Diterima</span>
                     @elseif ($laporan->status === 'Ditolak')
-                        <span class="badge bg-danger">
-                            Ditolak
-                        </span>
+                        <span class="badge bg-danger">Ditolak</span>
                     @endif
                 </div>
             </div>
         @empty
             <div class="col-12">
-                <p class="text-muted">
-                    Belum ada laporan yang dikirim.
-                </p>
+                <p class="text-muted">Belum ada laporan yang dikirim.</p>
             </div>
         @endforelse
     </div>
 
-    <!-- berita terbaru -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="fw-bold">Berita Terbaru</h5>
-        <a href="#" class="text-decoration-none">Lihat Semua ›</a>
+        <a href="#" class="lihat-semua">Lihat Semua ›</a>
     </div>
 
     <div class="row g-3 mb-5">
@@ -230,9 +179,7 @@
             <div class="news-card">
                 <div class="news-thumb"></div>
                 <h6>Pencegahan Konflik Kepentingan ASN</h6>
-                <small>
-                    Update kebijakan terbaru terkait pelaporan konflik kepentingan.
-                </small>
+                <small>Update kebijakan terbaru terkait pelaporan konflik kepentingan.</small>
             </div>
         </div>
 
@@ -240,9 +187,7 @@
             <div class="news-card">
                 <div class="news-thumb"></div>
                 <h6>Sosialisasi SIMAKK ASN</h6>
-                <small>
-                    Pengenalan sistem manajemen konflik kepentingan ASN.
-                </small>
+                <small>Pengenalan sistem manajemen konflik kepentingan ASN.</small>
             </div>
         </div>
 
@@ -250,9 +195,7 @@
             <div class="news-card">
                 <div class="news-thumb"></div>
                 <h6>Integritas ASN</h6>
-                <small>
-                    Langkah strategis menjaga integritas aparatur sipil negara.
-                </small>
+                <small>Langkah strategis menjaga integritas aparatur sipil negara.</small>
             </div>
         </div>
     </div>
