@@ -21,7 +21,7 @@ class PelaporanPotensialController extends Controller
         return view('user.pelaporan.potensial.create', compact('pengguna'));
     }
 
-    public function searchPegawai(Request $request)
+    public function searchPegawaiPotensial(Request $request)
     {
         $q = $request->q;
 

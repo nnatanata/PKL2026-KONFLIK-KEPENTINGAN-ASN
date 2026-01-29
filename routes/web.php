@@ -93,6 +93,7 @@ Route::middleware('auth')->group(function () {
         abort(403, 'Role tidak dikenali');
     })->name('user.dashboard');
 
+    // pelaporan potensial
     Route::get(
         '/pelaporan/potensial/create',
         [PelaporanPotensialController::class, 'create']
@@ -104,16 +105,25 @@ Route::middleware('auth')->group(function () {
     )->name('pelaporan.potensial.store');
 
     Route::get(
+        '/pegawai/search',
+        [PelaporanPotensialController::class, 'searchPegawaiPotensial']
+    )->name('pegawai.search');
+
+    // pelaporan aktual
+    Route::get(
         '/pelaporan/aktual/create',
         [PelaporanAktualController::class, 'create']
     )->name('pelaporan.aktual.create');
 
-    // ajax search pegawai
+    Route::post(
+        '/pelaporan/aktual',
+        [PelaporanAktualController::class, 'store']
+    )->name('pelaporan.aktual.store');
+
     Route::get(
         '/pegawai/search',
-        [PelaporanPotensialController::class, 'searchPegawai']
+        [PelaporanAktualController::class, 'searchPegawaiAktual']
     )->name('pegawai.search');
-
 });
 
 
