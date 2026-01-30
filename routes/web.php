@@ -89,8 +89,12 @@ Route::middleware('auth')->group(function () {
         ->name('konflik-aktual.index');
     Route::get('/konflik-aktual/{id}', [LaporanAktualController::class, 'show'])
         ->name('konflik-aktual.show');
+    
     Route::put('/konflik-aktual/{id}/verifikasi', [LaporanAktualController::class, 'updateVerifikasi'])
         ->name('konflik-aktual.verifikasi.update');
+    Route::put('/konflik-aktual/{id}/komentar', [LaporanAktualController::class, 'updateKomentar'])
+        ->name('konflik-aktual.komentar.update');
+    
     Route::delete('/konflik-aktual/{id}', [LaporanAktualController::class, 'destroy'])
         ->name('konflik-aktual.destroy');
         

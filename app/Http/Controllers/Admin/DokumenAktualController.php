@@ -99,7 +99,6 @@ class LaporanAktualController extends Controller
             abort(404, 'Laporan tidak ditemukan');
         }
 
-        //filter soft deleted documents
         $dokumen = DB::table('dokumen_aktual')
             ->where('laporan_aktual_id', $id)
             ->whereNull('deleted_at')
@@ -114,6 +113,7 @@ class LaporanAktualController extends Controller
         try {
             $request->validate([
                 'status' => 'required|in:Disetujui,Diproses,Ditolak',
+                'komentar' => 'required|string',
             ]);
 
             $laporan = DB::table('laporan_aktual')->where('id', $id)->first();
@@ -128,6 +128,7 @@ class LaporanAktualController extends Controller
                     ->where('id', $laporan->verifikasi_id)
                     ->update([
                         'status' => $request->status,
+                        'komentar' => $request->komentar,
                         'tanggal' => now(),
                         'updated_at' => now(),
                     ]);
@@ -141,53 +142,13 @@ class LaporanAktualController extends Controller
                     'updated_at' => now(),
                 ]);
 
-            $statusText = $request->status === 'Disetujui' ? 'disetujui' : 'ditolak';
-            $alertType = $request->status === 'Disetujui' ? 'approved' : 'rejected';
-            
-            //redirect success message di tab verifikasi
             return redirect()
-                ->route('konflik-aktual.show', [
-                    'id' => $id, 
-                    'success' => "Laporan berhasil {$statusText}",
-                    'type' => $alertType
-                ]);
+                ->route('konflik-aktual.show', $id)
+                ->with('success', 'Verifikasi berhasil disimpan');
         } catch (\Exception $e) {
             return redirect()
                 ->back()
                 ->with('error', 'Gagal menyimpan verifikasi: ' . $e->getMessage());
-        }
-    }
-
-    public function updateKomentar(Request $request, $id)
-    {
-        try {
-            $request->validate([
-                'komentar' => 'required|string',
-            ]);
-
-            $laporan = DB::table('laporan_aktual')->where('id', $id)->first();
-            
-            if (!$laporan) {
-                return redirect()->back()->with('error', 'Laporan tidak ditemukan');
-            }
-
-            //update komentar di verifikasi
-            if ($laporan->verifikasi_id) {
-                DB::table('verifikasi')
-                    ->where('id', $laporan->verifikasi_id)
-                    ->update([
-                        'komentar' => $request->komentar,
-                        'updated_at' => now(),
-                    ]);
-            }
-
-            //redirect success message di tab verifikasi
-            return redirect()
-                ->route('konflik-aktual.show', ['id' => $id, 'success' => 'Komentar berhasil disimpan']);
-        } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->with('error', 'Gagal menyimpan komentar: ' . $e->getMessage());
         }
     }
 
