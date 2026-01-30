@@ -5,6 +5,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\LaporanAktualController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\DokumenAktualController;
 
 /*root
 belum login ke halaman login
@@ -72,21 +76,22 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])
         ->name('logout');
 
-    Route::get('/dashboard', function () {
+    //dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/api/dashboard/chart-data', [DashboardController::class, 'getChartData'])
+        ->name('dashboard.chart.data');
 
-        $user = auth()->user();
+    //profil
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 
-        //inspektorat dan verifikator diarahkan ke admin dashboard
-        if ($user->role === 'inspektorat' || $user->role === 'verifikator') {
-            return view('admin.dashboard');
-        }
-
-        //pengguna ke user dashboard
-        if ($user->role === 'pengguna') {
-            return view('user.dashboard');
-        }
-
-        abort(403, 'Role tidak dikenali');
-    });
+    //konflik Aktual
+    Route::get('/konflik-aktual', [LaporanAktualController::class, 'index'])
+        ->name('konflik-aktual.index');
+    Route::get('/konflik-aktual/{id}', [LaporanAktualController::class, 'show'])
+        ->name('konflik-aktual.show');
+    Route::put('/konflik-aktual/{id}/verifikasi', [LaporanAktualController::class, 'updateVerifikasi'])
+        ->name('konflik-aktual.verifikasi.update');
+    Route::delete('/konflik-aktual/{id}', [LaporanAktualController::class, 'destroy'])
+        ->name('konflik-aktual.destroy');
+        
 });
-

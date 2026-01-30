@@ -610,14 +610,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Komentar / Rekomendasi</label>
+                        <label>Komentar</label>
                         <textarea class="form-textarea-modern" name="komentar" rows="8" required placeholder="Masukkan komentar atau rekomendasi verifikasi...">{{ $laporan->komentar_verifikasi }}</textarea>
                     </div>
 
                     <div class="text-end">
                         <button type="submit" class="btn-save-modern">
                             <i class="bi bi-save"></i>
-                            Save
+                            Kirim
                         </button>
                     </div>
                 </form>

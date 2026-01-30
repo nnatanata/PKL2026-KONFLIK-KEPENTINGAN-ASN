@@ -1,7 +1,9 @@
 @extends('admin.layout')
 
 @section('title', 'Dashboard Admin')
-@section('breadcrumb', 'Dashboard')
+@section('breadcrumb')
+    Halo, {{ auth()->user()->pegawai->nama ?? auth()->user()->username }}
+@endsection
 
 @section('content')
 
