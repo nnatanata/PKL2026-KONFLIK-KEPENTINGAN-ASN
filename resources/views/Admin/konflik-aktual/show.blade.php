@@ -187,7 +187,7 @@
         margin: 0;
     }
 
-    /* Verification Buttons Styles */
+    /*verification buttons styles */
     .verification-section {
         margin-bottom: 40px;
     }
@@ -270,7 +270,7 @@
         font-size: 1.3rem;
     }
 
-    /*modal styles */
+    /*modal styles*/
     .modal-overlay {
         position: fixed;
         top: 0;
@@ -421,7 +421,7 @@
         background: #059669;
     }
 
-    /*success slert styles */
+    /*success slert styles*/
     .success-alert {
         position: fixed;
         top: 30px;
@@ -747,7 +747,7 @@
             Kembali ke Daftar
         </a>
 
-        <!--success slert-->
+        <!--success alert-->
         <div id="successAlert" class="success-alert">
             <div class="success-alert-icon">
                 <i class="bi bi-check-circle-fill"></i>
@@ -785,6 +785,11 @@
                     <div class="detail-item">
                         <label>NIP Pelapor</label>
                         <div class="value">{{ $laporan->nip_pelapor }}</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <label>Jabatan Pelapor</label>
+                        <div class="value">{{ $laporan->jabatan_pelapor ?? '-' }}</div>
                     </div>
 
                     <div class="detail-item">
@@ -868,7 +873,7 @@
 
         <div id="verifikasi-tab" class="tab-pane">
             <div class="detail-card">
-                <!--status verifikasi-->
+                <!--status verifikasi section -->
                 <div class="verification-section">
                     <div class="section-header">
                         <h3>Status Verifikasi</h3>
@@ -876,9 +881,11 @@
                     
                     <div class="verification-buttons">
                         <button type="button" class="btn-verify btn-approve" onclick="handleVerification('Disetujui')" {{ $laporan->status_verifikasi == 'Disetujui' ? 'disabled' : '' }}>
+                            <i class="bi bi-check-circle"></i>
                             <span>Setujui Laporan</span>
                         </button>
                         <button type="button" class="btn-verify btn-reject" onclick="handleVerification('Ditolak')" {{ $laporan->status_verifikasi == 'Ditolak' ? 'disabled' : '' }}>
+                            <i class="bi bi-x-circle"></i>
                             <span>Tolak Laporan</span>
                         </button>
                     </div>
@@ -976,7 +983,6 @@ function switchTab(tabName) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-//modal functions
 function showModal(config) {
     const modal = document.getElementById('confirmModal');
     const modalIcon = document.getElementById('modalIcon');
@@ -986,12 +992,10 @@ function showModal(config) {
     const modalMessage = document.getElementById('modalMessage');
     const confirmBtn = document.getElementById('modalConfirmBtn');
     
-    //reset classes
     modalIcon.className = 'modal-icon';
     modalIconSymbol.className = 'bi';
     confirmBtn.className = 'modal-btn modal-btn-confirm';
     
-    //set content
     modalIcon.classList.add(config.iconClass);
     modalIconSymbol.classList.add(config.iconSymbol);
     modalTitle.textContent = config.title;
@@ -1011,7 +1015,6 @@ function closeModal() {
     document.getElementById('confirmModal').classList.remove('active');
 }
 
-//show success alert
 function showSuccessAlert(message, type = 'approved') {
     const alert = document.getElementById('successAlert');
     const messageEl = document.getElementById('successMessage');
@@ -1037,7 +1040,7 @@ function handleVerification(status) {
     const config = {
         title: status === 'Disetujui' ? 'Setujui Laporan' : 'Tolak Laporan',
         subtitle: 'Konfirmasi Verifikasi',
-        message: `Apakah Anda yakin ingin ${status === 'Disetujui' ? 'menyetujui' : 'menolak'} laporan ini?`,
+        message: `Apakah Anda yakin ingin ${status === 'Disetujui' ? 'menyetujui' : 'menolak'} laporan ini? Tindakan ini tidak dapat dibatalkan.`,
         iconClass: status === 'Disetujui' ? 'approve' : 'reject',
         iconSymbol: status === 'Disetujui' ? 'bi-check-circle' : 'bi-x-circle',
         confirmClass: status === 'Disetujui' ? 'approve' : '',
