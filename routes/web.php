@@ -98,6 +98,12 @@ Route::middleware('auth')->group(function () {
     
     Route::delete('/konflik-aktual/{id}', [LaporanAktualController::class, 'destroy'])
         ->name('konflik-aktual.destroy');
+    
+    //dokumen aktual
+    Route::get('/dokumen-aktual/{id}/download', [DokumenAktualController::class, 'download'])
+        ->name('dokumen-aktual.download');
+    Route::get('/dokumen-aktual/{id}/view', [DokumenAktualController::class, 'view'])
+        ->name('dokumen-aktual.view');
 
     //konflik Potensial
     Route::get('/konflik-potensial', [LaporanPotensialController::class, 'index'])

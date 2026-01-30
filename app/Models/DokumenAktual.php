@@ -17,6 +17,12 @@ class DokumenAktual extends Model
         'laporan_aktual_id'
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
+
     public function laporanAktual()
     {
         return $this->belongsTo(LaporanAktual::class, 'laporan_aktual_id');
