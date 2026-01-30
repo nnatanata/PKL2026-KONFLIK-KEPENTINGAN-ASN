@@ -2,7 +2,7 @@
 
 @section('title', 'Dashboard Admin')
 @section('breadcrumb')
-    Halo, {{ auth()->user()->pegawai->nama ?? auth()->user()->username }}
+    Halo, {{ auth()->user()->pegawai->nama ?? auth()->user()->username }} 👋
 @endsection
 
 @section('content')
