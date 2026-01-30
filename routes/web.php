@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LaporanAktualController;
+use App\Http\Controllers\Admin\LaporanPotensialController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\DokumenAktualController;
 
@@ -97,5 +98,19 @@ Route::middleware('auth')->group(function () {
     
     Route::delete('/konflik-aktual/{id}', [LaporanAktualController::class, 'destroy'])
         ->name('konflik-aktual.destroy');
+
+    //konflik Potensial
+    Route::get('/konflik-potensial', [LaporanPotensialController::class, 'index'])
+        ->name('konflik-potensial.index');
+    Route::get('/konflik-potensial/{id}', [LaporanPotensialController::class, 'show'])
+        ->name('konflik-potensial.show');
+    
+    Route::put('/konflik-potensial/{id}/verifikasi', [LaporanPotensialController::class, 'updateVerifikasi'])
+        ->name('konflik-potensial.verifikasi.update');
+    Route::put('/konflik-potensial/{id}/komentar', [LaporanPotensialController::class, 'updateKomentar'])
+        ->name('konflik-potensial.komentar.update');
+    
+    Route::delete('/konflik-potensial/{id}', [LaporanPotensialController::class, 'destroy'])
+        ->name('konflik-potensial.destroy');
         
 });

@@ -210,7 +210,10 @@
             <i class="bi bi-dot"></i> 
             <span class="menu-text">Konflik Aktual</span>
         </a>
-        <a href="#"><i class="bi bi-dot"></i> <span class="menu-text">Konflik Potensial</span></a>
+        <a href="{{ route('konflik-potensial.index') }}" class="{{ request()->routeIs('konflik-potensial.*') ? 'active' : '' }}">
+            <i class="bi bi-dot"></i> 
+            <span class="menu-text">Konflik Potensial</span>
+        </a>
     </div>
 
     {{--logout--}}
