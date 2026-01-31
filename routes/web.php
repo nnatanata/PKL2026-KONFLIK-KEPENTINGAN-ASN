@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\LaporanAktualController;
 use App\Http\Controllers\Admin\LaporanPotensialController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\DokumenAktualController;
+use App\Http\Controllers\Admin\DokumenPotensialController;
 
 /*root
 belum login ke halaman login
@@ -118,5 +119,11 @@ Route::middleware('auth')->group(function () {
     
     Route::delete('/konflik-potensial/{id}', [LaporanPotensialController::class, 'destroy'])
         ->name('konflik-potensial.destroy');
+    
+    //dokumen potensial
+    Route::get('/dokumen-potensial/{id}/download', [DokumenPotensialController::class, 'download'])
+        ->name('dokumen-potensial.download');
+    Route::get('/dokumen-potensial/{id}/view', [DokumenPotensialController::class, 'view'])
+        ->name('dokumen-potensial.view');
         
 });
