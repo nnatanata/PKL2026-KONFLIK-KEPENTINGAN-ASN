@@ -9,6 +9,17 @@
 
 @push('styles')
 <style>
+    :root {
+        --main-red: #b11217;
+        --active-red: #c72822;
+        --text-dark: #1e293b;
+        --text-medium: #475569;
+        --text-light: #94a3b8;
+        --bg-white: #ffffff;
+        --bg-light: #f8fafc;
+        --border-light: #e2e8f0;
+    }
+
     /*search dan filter*/
     .toolbar-container {
         background: white;
@@ -400,6 +411,167 @@
     .overlay.active {
         display: block;
     }
+
+    .delete-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        animation: fadeIn 0.2s ease;
+    }
+
+    .delete-modal-overlay.active {
+        display: flex;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .delete-modal-content {
+        background: var(--bg-white);
+        border-radius: 16px;
+        padding: 40px 32px 32px 32px;
+        max-width: 480px;
+        width: 90%;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        animation: slideUp 0.3s ease;
+        overflow: hidden;
+        text-align: center;
+        position: relative;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .delete-modal-close-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: transparent;
+        color: var(--text-medium);
+        cursor: pointer;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        font-size: 1.2rem;
+    }
+
+    .delete-modal-close-btn:hover {
+        background: var(--bg-light);
+        color: var(--text-dark);
+    }
+
+    .delete-modal-header {
+        padding: 0;
+        border: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+
+    .delete-modal-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.2rem;
+        margin: 0 auto;
+        background: #fee2e2;
+        color: #b11217;
+    }
+
+    .delete-modal-title {
+        text-align: center;
+    }
+
+    .delete-modal-title h4 {
+        margin: 0 0 8px 0;
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--text-dark);
+    }
+
+    .delete-modal-body {
+        padding: 0 12px 28px 12px;
+        text-align: center;
+    }
+
+    .delete-modal-message {
+        font-size: 0.95rem;
+        color: var(--text-medium);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .delete-modal-footer {
+        padding: 0;
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        border: none;
+    }
+
+    .delete-modal-btn {
+        padding: 12px 32px;
+        border-radius: 8px;
+        border: none;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        flex: 1;
+        max-width: 180px;
+    }
+
+    .delete-modal-btn-cancel {
+        background: var(--bg-light);
+        color: var(--text-dark);
+        border: 1px solid var(--border-light);
+    }
+
+    .delete-modal-btn-cancel:hover {
+        background: #e2e8f0;
+    }
+
+    .delete-modal-btn-confirm {
+        background: #b11217;
+        color: white;
+    }
+
+    .delete-modal-btn-confirm:hover {
+        background: #c72822;
+    }
+
+    @media (max-width: 768px) {
+        .delete-modal-btn {
+            max-width: none;
+        }
+    }
 </style>
 @endpush
 
@@ -472,7 +644,7 @@
         </ul>
     </div>
 
-    {{--filter button --}}
+    {{--filter button--}}
     <div style="position: relative;">
         <button class="btn-toolbar" id="filterBtn" onclick="toggleFilter()">
             <i class="bi bi-funnel"></i>
@@ -491,7 +663,7 @@
                 <input type="hidden" name="search" value="{{ request('search') }}">
                 @endif
 
-                {{--date range --}}
+                {{--date range--}}
                 <div class="filter-group">
                     <label>Date Range</label>
                     <div class="mb-2">
@@ -602,18 +774,12 @@
                            title="Detail">
                             <i class="bi bi-eye"></i>
                         </a>
-                        <form action="{{ route('konflik-potensial.destroy', $item->id) }}" 
-                              method="POST" 
-                              class="d-inline"
-                              onsubmit="return confirm('Yakin ingin menghapus laporan ini?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" 
-                                    class="btn btn-sm btn-action btn-outline-danger" 
-                                    title="Hapus">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
+                        <button type="button" 
+                                class="btn btn-sm btn-action btn-outline-danger" 
+                                title="Hapus"
+                                onclick="confirmDelete('{{ $item->id }}', '{{ $item->nama_pelapor }}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
                     </td>
                 </tr>
                 @empty
@@ -679,10 +845,50 @@
     @endif
 </div>
 
+<div id="deleteModal" class="delete-modal-overlay">
+    <div class="delete-modal-content">
+        <button type="button" class="delete-modal-close-btn" onclick="closeDeleteModal()">
+            <i class="bi bi-x-lg"></i>
+        </button>
+        
+        <div class="delete-modal-header">
+            <div class="delete-modal-icon">
+                <i class="bi bi-trash-fill"></i>
+            </div>
+            <div class="delete-modal-title">
+                <h4>Hapus Laporan</h4>
+            </div>
+        </div>
+        
+        <div class="delete-modal-body">
+            <p class="delete-modal-message" id="deleteMessage">
+                Apakah Anda yakin ingin menghapus laporan ini? Tindakan ini tidak dapat dibatalkan.
+            </p>
+        </div>
+        
+        <div class="delete-modal-footer">
+            <button type="button" class="delete-modal-btn delete-modal-btn-cancel" onclick="closeDeleteModal()">
+                Batal
+            </button>
+            <button type="button" class="delete-modal-btn delete-modal-btn-confirm" onclick="executeDelete()">
+                Hapus
+            </button>
+        </div>
+    </div>
+</div>
+
+<form id="deleteForm" method="POST" style="display: none;">
+    @csrf
+    @method('DELETE')
+</form>
+
 @endsection
 
 @push('scripts')
 <script>
+    let deleteItemId = null;
+    let deleteItemName = null;
+
     function toggleFilter() {
         const filterPanel = document.getElementById('filterPanel');
         const overlay = document.getElementById('overlay');
@@ -700,6 +906,47 @@
         }
         overlay.classList.remove('active');
     }
+
+    function confirmDelete(id, name) {
+        deleteItemId = id;
+        deleteItemName = name;
+        
+        const message = document.getElementById('deleteMessage');
+        message.textContent = `Apakah Anda yakin ingin menghapus laporan dari "${name}"? Tindakan ini tidak dapat dibatalkan.`;
+        
+        const modal = document.getElementById('deleteModal');
+        modal.classList.add('active');
+    }
+
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        modal.classList.remove('active');
+        deleteItemId = null;
+        deleteItemName = null;
+    }
+
+    function executeDelete() {
+        if (deleteItemId) {
+            const form = document.getElementById('deleteForm');
+            form.action = `/konflik-potensial/${deleteItemId}`;
+            form.submit();
+        }
+    }
+
+    document.getElementById('deleteModal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'deleteModal') {
+            closeDeleteModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('deleteModal');
+            if (modal && modal.classList.contains('active')) {
+                closeDeleteModal();
+            }
+        }
+    });
 
     const searchInput = document.getElementById('searchInput');
     let searchTimeout;

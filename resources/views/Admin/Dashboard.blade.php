@@ -100,6 +100,10 @@
                 responsive: true,
                 maintainAspectRatio: true,
                 aspectRatio: 2.5,
+                animation: {
+                    duration: 400,
+                    easing: 'easeInOutCubic'
+                },
                 plugins: {
                     legend: {
                         display: true,
@@ -203,8 +207,58 @@
         });
     }
 
+    function resizeChart() {
+        if (conflictChart) {
+            const originalDuration = conflictChart.options.animation.duration;
+            conflictChart.options.animation.duration = 0;
+            
+            conflictChart.resize();
+            
+            setTimeout(function() {
+                conflictChart.options.animation.duration = originalDuration;
+            }, 50);
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         updateChart();
+        
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+        
+        if (sidebar && content) {
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.attributeName === 'class') {
+                        setTimeout(function() {
+                            resizeChart();
+                        }, 150);
+                        
+                        setTimeout(function() {
+                            resizeChart();
+                        }, 320);
+                    }
+                });
+            });
+            
+            observer.observe(sidebar, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+            
+            observer.observe(content, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+        }
+        
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                resizeChart();
+            }, 100);
+        });
     });
 </script>
 @endpush

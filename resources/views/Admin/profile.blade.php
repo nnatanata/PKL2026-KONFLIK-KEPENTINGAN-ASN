@@ -1,5 +1,9 @@
 @extends('admin.layout')
 
+@php
+    $hideProfileIcon = true;
+@endphp
+
 @section('title', 'Profil Pengguna')
 @section('breadcrumb', 'Profil')
 

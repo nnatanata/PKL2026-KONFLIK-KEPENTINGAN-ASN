@@ -94,7 +94,6 @@
         font-size: 1.1rem;
     }
 
-    /* Badge untuk jumlah dokumen */
     .doc-count-badge {
         background: var(--primary-red);
         color: white;
@@ -200,7 +199,6 @@
         margin: 0;
     }
 
-    /*verification buttons styles */
     .verification-section {
         margin-bottom: 40px;
     }
@@ -283,7 +281,6 @@
         font-size: 1.3rem;
     }
 
-    /*modal styles*/
     .modal-overlay {
         position: fixed;
         top: 0;
@@ -310,12 +307,14 @@
     .modal-content {
         background: var(--bg-white);
         border-radius: 16px;
-        padding: 0;
+        padding: 40px 32px 32px 32px;
         max-width: 480px;
         width: 90%;
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
         animation: slideUp 0.3s ease;
         overflow: hidden;
+        text-align: center;
+        position: relative;
     }
 
     @keyframes slideUp {
@@ -329,22 +328,48 @@
         }
     }
 
-    .modal-header {
-        padding: 28px 32px;
-        border-bottom: 1px solid var(--border-light);
-        display: flex;
-        align-items: center;
-        gap: 16px;
-    }
-
-    .modal-icon {
-        width: 56px;
-        height: 56px;
-        border-radius: 12px;
+    .modal-close-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: transparent;
+        color: var(--text-medium);
+        cursor: pointer;
+        border-radius: 6px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.8rem;
+        transition: all 0.2s ease;
+        font-size: 1.2rem;
+    }
+
+    .modal-close-btn:hover {
+        background: var(--bg-light);
+        color: var(--text-dark);
+    }
+
+    .modal-header {
+        padding: 0;
+        border: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+
+    .modal-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.2rem;
+        margin: 0 auto;
     }
 
     .modal-icon.approve {
@@ -363,12 +388,12 @@
     }
 
     .modal-title {
-        flex: 1;
+        text-align: center;
     }
 
     .modal-title h4 {
-        margin: 0 0 4px 0;
-        font-size: 1.25rem;
+        margin: 0 0 8px 0;
+        font-size: 1.35rem;
         font-weight: 700;
         color: var(--text-dark);
     }
@@ -377,34 +402,39 @@
         margin: 0;
         font-size: 0.9rem;
         color: var(--text-medium);
+        display: none;
     }
 
     .modal-body {
-        padding: 32px;
+        padding: 0 12px 28px 12px;
+        text-align: center;
     }
 
     .modal-message {
-        font-size: 1rem;
-        color: var(--text-dark);
+        font-size: 0.95rem;
+        color: var(--text-medium);
         line-height: 1.6;
         margin: 0;
     }
 
     .modal-footer {
-        padding: 20px 32px 32px 32px;
+        padding: 0;
         display: flex;
         gap: 12px;
-        justify-content: flex-end;
+        justify-content: center;
+        border: none;
     }
 
     .modal-btn {
-        padding: 12px 28px;
+        padding: 12px 32px;
         border-radius: 8px;
         border: none;
         font-size: 0.95rem;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
+        flex: 1;
+        max-width: 180px;
     }
 
     .modal-btn-cancel {
@@ -434,7 +464,7 @@
         background: #059669;
     }
 
-    /*success alert styles*/
+    /*success alert*/
     .success-alert {
         position: fixed;
         top: 30px;
@@ -656,7 +686,7 @@
         color: white;
     }
 
-    /* Document Viewer Modal */
+    /* Document Viewer Modal - UPDATED TO CENTER DESIGN */
     .doc-modal-overlay {
         position: fixed;
         top: 0;
@@ -690,11 +720,12 @@
 
     .doc-modal-header {
         padding: 20px 28px;
-        border-bottom: 1px solid var(--border-light);
+        border: none;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center;
         flex-shrink: 0;
+        position: relative;
     }
 
     .doc-modal-title {
@@ -704,6 +735,7 @@
         font-size: 1.1rem;
         font-weight: 700;
         color: var(--text-dark);
+        text-align: center;
     }
 
     .doc-modal-title i {
@@ -712,6 +744,9 @@
     }
 
     .btn-close-modal {
+        position: absolute;
+        right: 20px;
+        top: 20px;
         width: 36px;
         height: 36px;
         border-radius: 8px;
@@ -788,10 +823,10 @@
 
     .doc-modal-footer {
         padding: 20px 28px;
-        border-top: 1px solid var(--border-light);
+        border: none;
         display: flex;
         gap: 12px;
-        justify-content: flex-end;
+        justify-content: center;
         flex-shrink: 0;
     }
 
@@ -829,7 +864,6 @@
         color: white;
     }
 
-    /* Empty State */
     .empty-state {
         text-align: center;
         padding: 80px 40px;
@@ -1013,6 +1047,10 @@
 
         .document-viewer-content iframe {
             height: 400px;
+        }
+
+        .modal-btn {
+            max-width: none;
         }
     }
 </style>
@@ -1210,7 +1248,7 @@
                                     <span class="file-date">
                                         <i class="bi bi-clock"></i>
                                         @php
-                                            // Handle both string and Carbon object
+                                           
                                             if (is_string($doc->created_at)) {
                                                 echo \Carbon\Carbon::parse($doc->created_at)->format('d M Y, H:i');
                                             } else {
@@ -1249,7 +1287,7 @@
 
         <div id="verifikasi-tab" class="tab-pane">
             <div class="detail-card">
-                <!--status verifikasi section -->
+                <!--status verifikasi-->
                 <div class="verification-section">
                     <div class="section-header">
                         <h3>Status Verifikasi</h3>
@@ -1257,11 +1295,9 @@
                     
                     <div class="verification-buttons">
                         <button type="button" class="btn-verify btn-approve" onclick="handleVerification('Disetujui')" {{ $laporan->status_verifikasi == 'Disetujui' ? 'disabled' : '' }}>
-                            <i class="bi bi-check-circle"></i>
                             <span>Setujui Laporan</span>
                         </button>
                         <button type="button" class="btn-verify btn-reject" onclick="handleVerification('Ditolak')" {{ $laporan->status_verifikasi == 'Ditolak' ? 'disabled' : '' }}>
-                            <i class="bi bi-x-circle"></i>
                             <span>Tolak Laporan</span>
                         </button>
                     </div>
@@ -1306,27 +1342,31 @@
     </div>
 </div>
 
-<!--confirmation modal -->
 <div id="confirmModal" class="modal-overlay">
     <div class="modal-content">
+        <button type="button" class="modal-close-btn" onclick="closeModal()">
+            <i class="bi bi-x-lg"></i>
+        </button>
+        
         <div class="modal-header">
             <div class="modal-icon" id="modalIcon">
                 <i class="bi" id="modalIconSymbol"></i>
             </div>
             <div class="modal-title">
                 <h4 id="modalTitle"></h4>
-                <p id="modalSubtitle"></p>
             </div>
         </div>
+        
         <div class="modal-body">
             <p class="modal-message" id="modalMessage"></p>
         </div>
+        
         <div class="modal-footer">
             <button type="button" class="modal-btn modal-btn-cancel" onclick="closeModal()">
                 Batal
             </button>
             <button type="button" class="modal-btn modal-btn-confirm" id="modalConfirmBtn">
-                Ya, Lanjutkan
+                Konfirmasi
             </button>
         </div>
     </div>
@@ -1396,7 +1436,6 @@ function showModal(config) {
     const modalIcon = document.getElementById('modalIcon');
     const modalIconSymbol = document.getElementById('modalIconSymbol');
     const modalTitle = document.getElementById('modalTitle');
-    const modalSubtitle = document.getElementById('modalSubtitle');
     const modalMessage = document.getElementById('modalMessage');
     const confirmBtn = document.getElementById('modalConfirmBtn');
     
@@ -1407,7 +1446,6 @@ function showModal(config) {
     modalIcon.classList.add(config.iconClass);
     modalIconSymbol.classList.add(config.iconSymbol);
     modalTitle.textContent = config.title;
-    modalSubtitle.textContent = config.subtitle;
     modalMessage.textContent = config.message;
     
     if (config.confirmClass) {
@@ -1447,10 +1485,9 @@ function showSuccessAlert(message, type = 'approved') {
 function handleVerification(status) {
     const config = {
         title: status === 'Disetujui' ? 'Setujui Laporan' : 'Tolak Laporan',
-        subtitle: 'Konfirmasi Verifikasi',
         message: `Apakah Anda yakin ingin ${status === 'Disetujui' ? 'menyetujui' : 'menolak'} laporan ini?`,
         iconClass: status === 'Disetujui' ? 'approve' : 'reject',
-        iconSymbol: status === 'Disetujui' ? 'bi-check-circle' : 'bi-x-circle',
+        iconSymbol: status === 'Disetujui' ? 'bi-check-circle-fill' : 'bi-x-circle-fill',
         confirmClass: status === 'Disetujui' ? 'approve' : '',
         onConfirm: () => {
             document.getElementById('statusInput').value = status;
@@ -1472,10 +1509,9 @@ function handleKomentarSubmit() {
     
     const config = {
         title: 'Kirim Komentar',
-        subtitle: 'Konfirmasi Pengiriman',
         message: 'Apakah Anda yakin ingin mengirim komentar ini? Komentar akan disimpan dan dapat dilihat oleh pihak terkait.',
         iconClass: 'comment',
-        iconSymbol: 'bi-chat-dots',
+        iconSymbol: 'bi-chat-dots-fill',
         confirmClass: '',
         onConfirm: () => {
             document.getElementById('komentarForm').submit();

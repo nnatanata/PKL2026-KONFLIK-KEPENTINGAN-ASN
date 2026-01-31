@@ -13,6 +13,7 @@
         :root {
             --main-red: #b11217;
             --active-red: #7a0c10;
+            --hover-red: rgba(255, 255, 255, 0.1);
         }
 
         body {
@@ -31,7 +32,7 @@
             display: flex;
             flex-direction: column;
             box-shadow: 4px 0 12px rgba(0,0,0,0.15);
-            transition: 0.3s;
+            transition: width 0.3s ease-in-out;
             z-index: 1000;
             border-radius: 0;
         }
@@ -57,28 +58,63 @@
             align-items: center;
             gap: 10px;
             text-decoration: none;
-            transition: 0.3s;
+            transition: background 0.2s ease;
+            position: relative;
+            background: transparent;
         }
 
         .sidebar a i {
             font-size: 1.1rem;
         }
 
-        .sidebar a:hover {
-            background: rgba(192, 26, 21, 0.6);
+        .sidebar a:hover:not(.active) {
+            background: var(--hover-red);
         }
 
-        .sidebar a.active {
-            background: var(--active-red);
+        .sidebar > a.active,
+        .sidebar .collapse a.active {
+            background: #7a0c10 !important;
             font-weight: 600;
+        }
+
+        .sidebar > a[data-bs-toggle="collapse"] {
+            background: transparent !important;
+        }
+
+        .sidebar > a[data-bs-toggle="collapse"]:hover {
+            background: var(--hover-red) !important;
+        }
+
+        .sidebar > a[data-bs-toggle="collapse"].active {
+            background: #7a0c10 !important;
+        }
+        
+        .sidebar .collapse:has(a.active) ~ a[data-bs-toggle="collapse"],
+        .sidebar a[data-bs-toggle="collapse"]:has(~ .collapse a.active) {
+            background: transparent !important;
         }
 
         .sidebar-bottom {
             margin-top: auto;
         }
 
+        .sidebar .collapse a {
+            padding-left: 45px;
+            font-size: 0.95rem;
+            background: transparent;
+        }
+
+        .sidebar .collapse a:hover:not(.active) {
+            background: var(--hover-red);
+        }
+
         .sidebar .collapse a.active {
-            background: var(--active-red);
+            background: #7a0c10 !important;
+            font-weight: 600;
+        }
+
+        .sidebar.mini .collapse a {
+            padding-left: 22px;
         }
 
         /*navbar*/
@@ -95,7 +131,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: 0.3s;
+            transition: margin-left 0.3s ease-in-out;
         }
 
         .topbar.full {
@@ -144,7 +180,7 @@
             margin-right: 30px;
             margin-top: 25px;
             padding-bottom: 40px;
-            transition: 0.3s;
+            transition: margin-left 0.3s ease-in-out;
         }
 
         .content.full {
@@ -163,7 +199,7 @@
             text-align: center;
             font-weight: 600;
             box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-            transition: 0.3s;
+            transition: transform 0.3s ease;
             cursor: pointer;
         }
 
@@ -190,7 +226,7 @@
 
 {{--sidebar--}}
 <div id="sidebar" class="sidebar">
-    <div class="px-4 mb-4 text-white fw-bold fs-5 d-flex align-items-center gap-2">
+    <div class="px-4 mb-4 text-white fw-bold fs-5 d-flex align-items: center gap-2">
         <i class="bi bi-list fs-4" onclick="toggleSidebar()" style="cursor:pointer;"></i>
         <span class="brand-text">SIMAKK ASN</span>
     </div>
@@ -200,17 +236,20 @@
         <span class="menu-text">Dashboard</span>
     </a>
 
-    <a data-bs-toggle="collapse" href="#menuKonflik" class="{{ request()->is('konflik-*') ? 'active' : '' }}">
+    <a data-bs-toggle="collapse" href="#menuKonflik" 
+       onclick="handleMenuKonflikClick(event)">
         <i class="bi bi-folder"></i>
         <span class="menu-text">Data Konflik</span>
     </a>
 
     <div class="collapse {{ request()->is('konflik-*') ? 'show' : '' }}" id="menuKonflik">
-        <a href="{{ route('konflik-aktual.index') }}" class="{{ request()->routeIs('konflik-aktual.*') ? 'active' : '' }}">
+        <a href="{{ route('konflik-aktual.index') }}" 
+           class="{{ request()->routeIs('konflik-aktual.*') ? 'active' : '' }}">
             <i class="bi bi-dot"></i> 
             <span class="menu-text">Konflik Aktual</span>
         </a>
-        <a href="{{ route('konflik-potensial.index') }}" class="{{ request()->routeIs('konflik-potensial.*') ? 'active' : '' }}">
+        <a href="{{ route('konflik-potensial.index') }}" 
+           class="{{ request()->routeIs('konflik-potensial.*') ? 'active' : '' }}">
             <i class="bi bi-dot"></i> 
             <span class="menu-text">Konflik Potensial</span>
         </a>
@@ -267,16 +306,142 @@
 </div>
 
 <script>
-    function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('mini');
-        
+    function getSidebarState() {
+        return localStorage.getItem('sidebarState') || 'expanded';
+    }
+
+    function setSidebarState(state) {
+        localStorage.setItem('sidebarState', state);
+    }
+
+    function applySidebarState() {
+        const state = getSidebarState();
+        const sidebar = document.getElementById('sidebar');
         const topbar = document.getElementById('topbar');
+        const content = document.getElementById('content');
+
+        if (state === 'mini') {
+            sidebar.classList.add('mini');
+            if (topbar) topbar.classList.add('full');
+            content.classList.add('full');
+        } else {
+            sidebar.classList.remove('mini');
+            if (topbar) topbar.classList.remove('full');
+            content.classList.remove('full');
+        }
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const topbar = document.getElementById('topbar');
+        const content = document.getElementById('content');
+        
+        sidebar.classList.toggle('mini');
         if (topbar) {
             topbar.classList.toggle('full');
         }
-        
-        document.getElementById('content').classList.toggle('full');
+        content.classList.toggle('full');
+
+        const newState = sidebar.classList.contains('mini') ? 'mini' : 'expanded';
+        setSidebarState(newState);
     }
+
+    function handleMenuKonflikClick(event) {
+        const sidebar = document.getElementById('sidebar');
+        const menuKonflik = event.currentTarget;
+        
+        if (sidebar.classList.contains('mini')) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            menuKonflik.classList.remove('active');
+            
+            sidebar.classList.remove('mini');
+            const topbar = document.getElementById('topbar');
+            if (topbar) topbar.classList.remove('full');
+            document.getElementById('content').classList.remove('full');
+            setSidebarState('expanded');
+            
+            setTimeout(() => {
+                const collapseElement = document.getElementById('menuKonflik');
+                if (collapseElement && !collapseElement.classList.contains('show')) {
+                    const collapse = new bootstrap.Collapse(collapseElement, {
+                        toggle: true
+                    });
+                }
+
+                menuKonflik.classList.remove('active');
+            }, 300);
+        } else {
+            setTimeout(() => {
+                const collapseElement = document.getElementById('menuKonflik');
+                const hasActiveSubmenu = collapseElement.querySelector('a.active');
+                
+                if (!hasActiveSubmenu) {
+                    if (collapseElement.classList.contains('show')) {
+                        menuKonflik.classList.add('active');
+                    } else {
+                        menuKonflik.classList.remove('active');
+                    }
+                } else {
+            
+                    menuKonflik.classList.remove('active');
+                }
+            }, 50);
+        }
+    }
+
+    function initMenuKonflikHighlight() {
+        const menuKonflikLink = document.querySelector('[data-bs-toggle="collapse"][href="#menuKonflik"]');
+        const collapseElement = document.getElementById('menuKonflik');
+        
+        if (!menuKonflikLink || !collapseElement) return;
+        
+        const hasActiveSubmenu = collapseElement.querySelector('a.active');
+        
+        console.log('Init Menu Konflik:', {
+            hasActiveSubmenu: !!hasActiveSubmenu,
+            collapseShown: collapseElement.classList.contains('show')
+        });
+        
+        menuKonflikLink.classList.remove('active');
+        
+        if (collapseElement.classList.contains('show') && !hasActiveSubmenu) {
+            menuKonflikLink.classList.add('active');
+            console.log('Added active class to Data Konflik');
+        } else {
+            console.log('No active class for Data Konflik');
+        }
+        
+        collapseElement.addEventListener('show.bs.collapse', function() {
+            const hasActiveSubmenu = this.querySelector('a.active');
+            if (!hasActiveSubmenu) {
+                menuKonflikLink.classList.add('active');
+                console.log('Collapse shown - added active');
+            } else {
+                menuKonflikLink.classList.remove('active');
+                console.log('Collapse shown - but submenu active, no highlight');
+            }
+        });
+        
+        collapseElement.addEventListener('hide.bs.collapse', function() {
+            menuKonflikLink.classList.remove('active');
+            console.log('Collapse hidden - removed active');
+        });
+        
+        const submenuLinks = collapseElement.querySelectorAll('a');
+        submenuLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                menuKonflikLink.classList.remove('active');
+                console.log('Submenu clicked - removed active from Data Konflik');
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        applySidebarState();
+        initMenuKonflikHighlight();
+    });
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
