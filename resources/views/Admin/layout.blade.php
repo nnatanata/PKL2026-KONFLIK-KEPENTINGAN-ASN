@@ -166,12 +166,20 @@
             margin-right: 8px;
         }
 
-        .topbar .bi-person-circle {
+        .topbar .dropdown > a {
             transition: 0.3s;
         }
 
-        .topbar .bi-person-circle:hover {
-            transform: scale(1.1);
+        .topbar .dropdown > a:hover i {
+            opacity: 0.8;
+        }
+        
+        .topbar .bi-caret-down-fill {
+            transition: transform 0.3s ease;
+        }
+        
+        .topbar .dropdown.show .bi-caret-down-fill {
+            transform: rotate(180deg);
         }
 
         /*content*/
@@ -274,10 +282,11 @@
 
     @if(!isset($hideProfileIcon) || !$hideProfileIcon)
     <div class="dropdown">
-        <a href="#" class="text-white text-decoration-none" 
+        <a href="#" class="text-white text-decoration-none d-flex align-items-center gap-2" 
            id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false" 
            style="cursor: pointer;">
             <i class="bi bi-person-circle fs-4"></i>
+            <i class="bi bi-caret-down-fill" style="font-size: 0.85rem;"></i>
         </a>
         <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
             <li>
@@ -369,7 +378,6 @@
                         toggle: true
                     });
                 }
-
                 menuKonflik.classList.remove('active');
             }, 300);
         } else {
@@ -384,7 +392,7 @@
                         menuKonflik.classList.remove('active');
                     }
                 } else {
-            
+
                     menuKonflik.classList.remove('active');
                 }
             }, 50);
