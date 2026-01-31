@@ -1448,7 +1448,7 @@ function handleVerification(status) {
     const config = {
         title: status === 'Disetujui' ? 'Setujui Laporan' : 'Tolak Laporan',
         subtitle: 'Konfirmasi Verifikasi',
-        message: `Apakah Anda yakin ingin ${status === 'Disetujui' ? 'menyetujui' : 'menolak'} laporan ini? Tindakan ini tidak dapat dibatalkan.`,
+        message: `Apakah Anda yakin ingin ${status === 'Disetujui' ? 'menyetujui' : 'menolak'} laporan ini?`,
         iconClass: status === 'Disetujui' ? 'approve' : 'reject',
         iconSymbol: status === 'Disetujui' ? 'bi-check-circle' : 'bi-x-circle',
         confirmClass: status === 'Disetujui' ? 'approve' : '',
