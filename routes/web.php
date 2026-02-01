@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
+use App\Http\Controllers\User\LaporanController;
 use App\Http\Controllers\User\PelaporanPotensialController;
 use App\Http\Controllers\User\PelaporanAktualController;
 
@@ -92,6 +93,11 @@ Route::middleware('auth')->group(function () {
 
         abort(403, 'Role tidak dikenali');
     })->name('user.dashboard');
+
+    Route::get(
+        '/laporan',
+        [LaporanController::class, 'index']
+    )->name('laporan.index');
 
     // pelaporan potensial
     Route::get(

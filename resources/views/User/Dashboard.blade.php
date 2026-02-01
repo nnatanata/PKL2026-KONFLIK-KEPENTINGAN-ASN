@@ -144,7 +144,9 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="fw-bold">Status Terbaru</h5>
-        <a href="#" class="lihat-semua">Lihat Semua ›</a>
+        <a href="{{ route('laporan.index') }}" class="lihat-semua">
+            Lihat Semua ›
+        </a>
     </div>
 
     <div class="row g-3 mb-5">

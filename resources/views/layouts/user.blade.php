@@ -67,6 +67,20 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             border: 1px solid #eee;
         }
+
+        .status-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 5px solid var(--brin-maroon);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .status-card:hover {
+            transform: translateY(-4px);
+        }
+
     </style>
 </head>
 <body>
