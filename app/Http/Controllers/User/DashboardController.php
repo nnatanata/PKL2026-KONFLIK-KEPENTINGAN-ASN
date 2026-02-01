@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\LaporanAktual;
 use App\Models\LaporanPotensial;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -28,22 +29,25 @@ class DashboardController extends Controller
             +
             LaporanPotensial::where('pengguna_id', $userId)->where('status_potensial', 'Ditolak')->count();
 
-
         $laporanAktual = LaporanAktual::select(
                 'judul_aktual as judul',
                 'status_aktual as status',
-                'tanggal_aktual as tanggal'
+                'created_at as waktu'
             )
             ->where('pengguna_id', $userId);
 
-        $statusTerbaru = LaporanPotensial::select(
-                'judul_potensial as judul',
-                'status_potensial as status',
-                'tanggal_potensial as tanggal'
+        $statusTerbaru = DB::query()
+            ->fromSub(
+                LaporanPotensial::select(
+                        'judul_potensial as judul',
+                        'status_potensial as status',
+                        'created_at as waktu'
+                    )
+                    ->where('pengguna_id', $userId)
+                    ->unionAll($laporanAktual),
+                'laporan'
             )
-            ->where('pengguna_id', $userId)
-            ->unionAll($laporanAktual)
-            ->orderBy('tanggal', 'desc')
+            ->orderBy('waktu', 'desc') 
             ->limit(3)
             ->get();
 

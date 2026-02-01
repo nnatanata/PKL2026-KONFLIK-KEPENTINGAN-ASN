@@ -29,7 +29,7 @@
                 </h6>
 
                 <small class="text-muted">
-                    {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
+                    {{ \Carbon\Carbon::parse($item->waktu)->format('d M Y H:i') }}
                 </small>
             </div>
         </div>

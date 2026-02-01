@@ -28,11 +28,6 @@
             font-weight: 500;
         }
 
-        .navbar-nav .nav-link.active {
-            font-weight: 600;
-            border-bottom: 2px solid #ffffff;
-        }
-
         .navbar-nav .nav-item {
             margin: 0 10px;
         }
