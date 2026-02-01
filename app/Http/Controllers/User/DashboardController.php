@@ -29,23 +29,23 @@ class DashboardController extends Controller
             LaporanPotensial::where('pengguna_id', $userId)->where('status_potensial', 'Ditolak')->count();
 
 
+        $laporanAktual = LaporanAktual::select(
+                'judul_aktual as judul',
+                'status_aktual as status',
+                'tanggal_aktual as tanggal'
+            )
+            ->where('pengguna_id', $userId);
 
-        $laporanAktual = LaporanAktual::where('pengguna_id', $userId)
-            ->select('judul_aktual as judul', 'status_aktual as status', 'created_at')
-            ->latest()
-            ->take(5)
+        $statusTerbaru = LaporanPotensial::select(
+                'judul_potensial as judul',
+                'status_potensial as status',
+                'tanggal_potensial as tanggal'
+            )
+            ->where('pengguna_id', $userId)
+            ->unionAll($laporanAktual)
+            ->orderBy('tanggal', 'desc')
+            ->limit(3)
             ->get();
-
-        $laporanPotensial = LaporanPotensial::where('pengguna_id', $userId)
-            ->select('judul_potensial as judul', 'status_potensial as status', 'created_at')
-            ->latest()
-            ->take(5)
-            ->get();
-
-        $statusTerbaru = $laporanAktual
-            ->merge($laporanPotensial)
-            ->sortByDesc('created_at')
-            ->take(5);
 
         return view('user.dashboard', compact(
             'diproses',

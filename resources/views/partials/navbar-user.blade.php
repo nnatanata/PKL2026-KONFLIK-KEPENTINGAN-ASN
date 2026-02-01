@@ -43,8 +43,8 @@
 
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#">
-                        Halo, {{ auth()->user()->nama ?? 'Pengguna' }}
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        Halo, {{ auth()->user()->pegawai->nama ?? 'Pengguna' }}!
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li>
