@@ -5,12 +5,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\LaporanAktualController;
-use App\Http\Controllers\Admin\LaporanPotensialController;
-use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\DokumenAktualController;
-use App\Http\Controllers\Admin\DokumenPotensialController;
+use App\Http\Controllers\Verifikator\DashboardController;
+use App\Http\Controllers\Verifikator\LaporanAktualController;
+use App\Http\Controllers\Verifikator\LaporanPotensialController;
+use App\Http\Controllers\Verifikator\ProfileController;
+use App\Http\Controllers\Verifikator\DokumenAktualController;
+use App\Http\Controllers\Verifikator\DokumenPotensialController;
 
 /*root
 belum login ke halaman login
