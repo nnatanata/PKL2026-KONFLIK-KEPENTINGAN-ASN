@@ -30,18 +30,22 @@ class DashboardController extends Controller
             LaporanPotensial::where('pengguna_id', $userId)->where('status_potensial', 'Ditolak')->count();
 
         $laporanAktual = LaporanAktual::select(
+                'id',
                 'judul_aktual as judul',
                 'status_aktual as status',
-                'created_at as waktu'
+                'created_at as waktu',
+                DB::raw("'aktual' as tipe")
             )
             ->where('pengguna_id', $userId);
 
         $statusTerbaru = DB::query()
             ->fromSub(
                 LaporanPotensial::select(
+                        'id',
                         'judul_potensial as judul',
                         'status_potensial as status',
-                        'created_at as waktu'
+                        'updated_at as waktu', //updated_at
+                        DB::raw("'potensial' as tipe")
                     )
                     ->where('pengguna_id', $userId)
                     ->unionAll($laporanAktual),

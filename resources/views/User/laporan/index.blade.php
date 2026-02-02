@@ -8,30 +8,33 @@
 <div class="row g-4">
     @forelse ($laporan as $item)
         <div class="col-md-4">
-            <div class="status-card h-100">
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="badge 
-                        {{ $item->tipe === 'Aktual' ? 'bg-danger' : 'bg-secondary' }}">
-                        {{ $item->tipe }}
-                    </span>
+            <a href="{{ route('laporan.show', [$item->tipe === 'Aktual' ? 'aktual' : 'potensial', $item->id]) }}"
+            class="text-decoration-none text-dark">
+                <div class="status-card h-100">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="badge 
+                            {{ $item->tipe === 'Aktual' ? 'bg-danger' : 'bg-secondary' }}">
+                            {{ $item->tipe }}
+                        </span>
 
-                    @if ($item->status === 'Diproses')
-                        <span class="badge bg-warning text-dark">Diproses</span>
-                    @elseif ($item->status === 'Diterima')
-                        <span class="badge bg-success">Diterima</span>
-                    @elseif ($item->status === 'Ditolak')
-                        <span class="badge bg-danger">Ditolak</span>
-                    @endif
+                        @if ($item->status === 'Diproses')
+                            <span class="badge bg-warning text-dark">Diproses</span>
+                        @elseif ($item->status === 'Diterima')
+                            <span class="badge bg-success">Diterima</span>
+                        @elseif ($item->status === 'Ditolak')
+                            <span class="badge bg-danger">Ditolak</span>
+                        @endif
+                    </div>
+
+                    <h6 class="fw-semibold">
+                        {{ $item->judul }}
+                    </h6>
+
+                    <small class="text-muted">
+                        {{ \Carbon\Carbon::parse($item->waktu)->format('d M Y H:i') }}
+                    </small>
                 </div>
-
-                <h6 class="fw-semibold">
-                    {{ $item->judul }}
-                </h6>
-
-                <small class="text-muted">
-                    {{ \Carbon\Carbon::parse($item->waktu)->format('d M Y H:i') }}
-                </small>
-            </div>
+            </a>
         </div>
     @empty
         <div class="col-12">

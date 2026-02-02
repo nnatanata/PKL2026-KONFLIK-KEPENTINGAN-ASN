@@ -145,9 +145,11 @@
     </div>
 
     <div class="row g-3 mb-5">
-        @forelse ($statusTerbaru as $laporan)
-            <div class="col-md-4">
-                <div class="status-card">
+    @forelse ($statusTerbaru as $laporan)
+        <div class="col-md-4">
+            <a href="{{ route('laporan.show', [$laporan->tipe, $laporan->id]) }}"
+            class="text-decoration-none text-dark">
+                <div class="status-card h-100">
                     <h6>{{ $laporan->judul }}</h6>
 
                     @if ($laporan->status === 'Diproses')
@@ -158,13 +160,14 @@
                         <span class="badge bg-danger">Ditolak</span>
                     @endif
                 </div>
-            </div>
-        @empty
-            <div class="col-12">
-                <p class="text-muted">Belum ada laporan yang dikirim.</p>
-            </div>
-        @endforelse
-    </div>
+            </a>
+        </div>
+    @empty
+        <div class="col-12">
+            <p class="text-muted">Belum ada laporan yang dikirim.</p>
+        </div>
+    @endforelse
+</div>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="fw-bold">Berita Terbaru</h5>

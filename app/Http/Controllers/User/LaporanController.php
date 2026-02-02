@@ -29,7 +29,7 @@ class LaporanController extends Controller
                         'id',
                         'judul_potensial as judul',
                         'status_potensial as status',
-                        'created_at as waktu',
+                        'updated_at as waktu',
                         DB::raw("'Potensial' as tipe")
                     )
                     ->where('pengguna_id', $userId)
@@ -40,5 +40,28 @@ class LaporanController extends Controller
             ->paginate(9);
 
         return view('user.laporan.index', compact('laporan'));
+    }
+
+    public function show(string $tipe, int $id)
+    {
+        $userId = Auth::id();
+
+        if ($tipe === 'aktual') {
+            $laporan = LaporanAktual::where('id', $id)
+                ->where('pengguna_id', $userId)
+                ->firstOrFail();
+
+            return view('user.laporan.show-aktual', compact('laporan'));
+        }
+
+        if ($tipe === 'potensial') {
+            $laporan = LaporanPotensial::where('id', $id)
+                ->where('pengguna_id', $userId)
+                ->firstOrFail();
+
+            return view('user.laporan.show-potensial', compact('laporan'));
+        }
+
+        abort(404);
     }
 }

@@ -130,6 +130,11 @@ Route::middleware('auth')->group(function () {
         '/pegawai/search',
         [PelaporanAktualController::class, 'searchPegawaiAktual']
     )->name('pegawai.search');
+
+    Route::middleware(['auth'])->prefix('laporan')->group(function () {
+        Route::get('{tipe}/{id}', [\App\Http\Controllers\User\LaporanController::class, 'show'])
+            ->name('laporan.show');
+    });
 });
 
 
