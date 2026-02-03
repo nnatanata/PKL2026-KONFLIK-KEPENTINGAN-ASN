@@ -94,6 +94,10 @@ Route::middleware('auth')->group(function () {
         abort(403, 'Role tidak dikenali');
     })->name('user.dashboard');
 
+    Route::get('/panduan', function () {
+        return view('user.panduan.index');
+    })->name('user.panduan');
+
     Route::get(
         '/laporan',
         [LaporanController::class, 'index']
