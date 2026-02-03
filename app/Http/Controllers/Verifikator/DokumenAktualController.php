@@ -64,7 +64,7 @@ class DokumenAktualController extends Controller
         ]);
     }
     
-    //view docx as HTML
+    //view docx as html
     private function viewDocxAsHtml($dokumen, $fullPath)
     {
         try {
