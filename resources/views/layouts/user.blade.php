@@ -77,10 +77,74 @@
             transition: transform 0.2s ease;
         }
 
+        /* ===== Card Total Pelaporan ===== */
+        .card-box {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            font-weight: 600;
+            border: 1px solid #eee;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .card-box:hover {
+            transform: translateY(-4px);
+        }
+
+        .lihat-semua {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .lihat-semua:hover {
+            text-decoration: underline;
+        }
+
+        .news-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 15px;
+            height: 100%;
+            border-top: 4px solid var(--brin-red);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .news-thumb {
+            background-color: #f1f1f1;
+            height: 120px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+
         .status-card:hover {
             transform: translateY(-4px);
         }
 
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-diproses {
+            color: #ffc107;
+        }
+
+        .stat-diterima {
+            color: #198754; 
+        }
+
+        .stat-ditolak {
+            color: #dc3545; 
+        }
     </style>
 </head>
 <body>

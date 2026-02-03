@@ -44,7 +44,7 @@ class DashboardController extends Controller
                         'id',
                         'judul_potensial as judul',
                         'status_potensial as status',
-                        'updated_at as waktu', //updated_at
+                        'updated_at as waktu',
                         DB::raw("'potensial' as tipe")
                     )
                     ->where('pengguna_id', $userId)
