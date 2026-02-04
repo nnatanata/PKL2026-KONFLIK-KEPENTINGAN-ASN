@@ -25,9 +25,20 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
+            $user = Auth::user();
+
+            session([
+                'ever_logged_in' => true,
+                'last_role' => $user->role,
+            ]);
+
+            if ($user->role === 'inspektorat') {
+                return redirect()->intended('/inspektorat/dashboard');
+            } elseif ($user->role === 'verifikator') {
+                return redirect()->intended('/dashboard');
+            }
             return redirect()->intended('/dashboard');
         }
-
         return back()->withErrors([
             'username' => 'Username atau password salah',
         ]);

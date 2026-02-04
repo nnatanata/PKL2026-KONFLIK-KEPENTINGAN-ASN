@@ -149,7 +149,11 @@
 </head>
 <body>
 
-@include('partials.navbar-user')
+@if (auth()->check())
+    @include('partials.navbar-user')
+@else
+    @include('partials.navbar-landing')
+@endif
 
 <main class="container">
     @yield('content')

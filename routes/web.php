@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\LaporanController;
@@ -15,10 +16,18 @@ belum login ke halaman login
 sudah login ke halaman dashboard*/
 
 Route::get('/', function () {
-    return auth()->check()
-        ? redirect('/dashboard')
-        : redirect('/login');
-});
+    // masih login 
+    if (auth()->check()) {
+        return redirect('/dashboard');
+    }
+    // logout admin 
+    if (session('logged_out_role') &&
+        in_array(session('logged_out_role'), ['verifikator','inspektorat'])) {
+        return redirect('/login');
+    }
+    // default 
+    return app(LandingController::class)->index();
+})->name('landing');
 
 //force logout sementara
 Route::get('/force-logout', function () {
@@ -28,6 +37,10 @@ Route::get('/force-logout', function () {
 
     return redirect('/login');
 });
+
+//landing page
+Route::get('/', [LandingController::class, 'index'])
+    ->name('landing');
 
 //guest (belum login)
 Route::middleware('guest')->group(function () {
@@ -75,8 +88,18 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
 
     // logout
-    Route::post('/logout', [LoginController::class, 'logout'])
-        ->name('logout');
+    Route::post('/logout', function (Request $request) {
+        $role = session('last_role');
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        // simpan role terakhir sementara
+        session(['logged_out_role' => $role]);
+        if (in_array($role, ['verifikator', 'inspektorat'])) {
+            return redirect('/login');
+        }
+        return redirect('/'); 
+    })->name('logout');
 
     // dashboard
     Route::get('/dashboard', function () {
