@@ -33,7 +33,8 @@ class LaporanPotensialController extends Controller
                 'lp.rencana_pensiun',
                 'peg.nama as nama_pelapor',
                 'peg.nip as nip_pelapor',
-                'p.username as username_pelapor'
+                'p.username as username_pelapor',
+                'v.status_inspektorat'
             )
             ->whereNull('lp.deleted_at');
 
@@ -98,7 +99,8 @@ class LaporanPotensialController extends Controller
                 'v.status as status_verifikasi',
                 'v.tanggal as tanggal_verifikasi',
                 'v.komentar as komentar_verifikasi',
-                'v.rekomendasi as rekomendasi_verifikasi'
+                'v.rekomendasi as rekomendasi_verifikasi',
+                'v.status_inspektorat as status_inspektorat'
             )
             ->where('lp.id', $id)
             ->first();
@@ -111,7 +113,7 @@ class LaporanPotensialController extends Controller
             $laporan->nama_terduga_lengkap = $laporan->nama_terduga;
         }
 
-        //filter soft deleted documents
+        //filter soft deleted dokumen
         $dokumen = DB::table('dokumen_potensial')
             ->where('laporan_potensial_id', $id)
             ->whereNull('deleted_at')
@@ -128,10 +130,18 @@ class LaporanPotensialController extends Controller
                 'status' => 'required|in:Disetujui,Diproses,Ditolak',
             ]);
 
-            $laporan = DB::table('laporan_potensial')->where('id', $id)->first();
+            $laporan = DB::table('laporan_potensial as lp')
+                ->leftJoin('verifikasi as v', 'lp.verifikasi_id', '=', 'v.id')
+                ->select('lp.*', 'v.status_inspektorat')
+                ->where('lp.id', $id)
+                ->first();
             
             if (!$laporan) {
                 return redirect()->back()->with('error', 'Laporan tidak ditemukan');
+            }
+
+            if (in_array($laporan->status_inspektorat, ['Disetujui Inspektorat', 'Ditolak Inspektorat'])) {
+                return redirect()->back()->with('error', 'Tidak dapat mengubah verifikasi. Laporan sudah diverifikasi oleh Inspektorat.');
             }
 
             //update verifikasi
@@ -156,7 +166,6 @@ class LaporanPotensialController extends Controller
             $statusText = $request->status === 'Disetujui' ? 'disetujui' : 'ditolak';
             $alertType = $request->status === 'Disetujui' ? 'approved' : 'rejected';
             
-            //redirect success message di tab verifikasi
             return redirect()
                 ->route('konflik-potensial.show', [
                     'id' => $id, 
@@ -177,13 +186,21 @@ class LaporanPotensialController extends Controller
                 'komentar' => 'required|string',
             ]);
 
-            $laporan = DB::table('laporan_potensial')->where('id', $id)->first();
+            $laporan = DB::table('laporan_potensial as lp')
+                ->leftJoin('verifikasi as v', 'lp.verifikasi_id', '=', 'v.id')
+                ->select('lp.*', 'v.status_inspektorat')
+                ->where('lp.id', $id)
+                ->first();
             
             if (!$laporan) {
                 return redirect()->back()->with('error', 'Laporan tidak ditemukan');
             }
 
-            //update komentar di verifikasi
+            if (in_array($laporan->status_inspektorat, ['Disetujui Inspektorat', 'Ditolak Inspektorat'])) {
+                return redirect()->back()->with('error', 'Tidak dapat mengubah komentar. Laporan sudah diverifikasi oleh Inspektorat.');
+            }
+
+            //update komentar
             if ($laporan->verifikasi_id) {
                 DB::table('verifikasi')
                     ->where('id', $laporan->verifikasi_id)
@@ -193,7 +210,6 @@ class LaporanPotensialController extends Controller
                     ]);
             }
 
-            //redirect success message di tab verifikasi
             return redirect()
                 ->route('konflik-potensial.show', ['id' => $id, 'success' => 'Komentar berhasil disimpan']);
         } catch (\Exception $e) {

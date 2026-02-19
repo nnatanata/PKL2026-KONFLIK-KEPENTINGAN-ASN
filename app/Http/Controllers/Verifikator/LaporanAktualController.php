@@ -27,7 +27,8 @@ class LaporanAktualController extends Controller
                 'la.saran_pengendalian',
                 'peg.nama as nama_pelapor',
                 'peg.nip as nip_pelapor',
-                'p.username as username_pelapor'
+                'p.username as username_pelapor',
+                'v.status_inspektorat'
             )
             ->whereNull('la.deleted_at');
 
@@ -90,7 +91,8 @@ class LaporanAktualController extends Controller
                 'v.status as status_verifikasi',
                 'v.tanggal as tanggal_verifikasi',
                 'v.komentar as komentar_verifikasi',
-                'v.rekomendasi as rekomendasi_verifikasi'
+                'v.rekomendasi as rekomendasi_verifikasi',
+                'v.status_inspektorat as status_inspektorat'
             )
             ->where('la.id', $id)
             ->first();
@@ -99,7 +101,7 @@ class LaporanAktualController extends Controller
             abort(404, 'Laporan tidak ditemukan');
         }
 
-        //filter soft deleted documents
+        //filter soft deleted dokumen
         $dokumen = DB::table('dokumen_aktual')
             ->where('laporan_aktual_id', $id)
             ->whereNull('deleted_at')
@@ -116,10 +118,18 @@ class LaporanAktualController extends Controller
                 'status' => 'required|in:Disetujui,Diproses,Ditolak',
             ]);
 
-            $laporan = DB::table('laporan_aktual')->where('id', $id)->first();
+            $laporan = DB::table('laporan_aktual as la')
+                ->leftJoin('verifikasi as v', 'la.verifikasi_id', '=', 'v.id')
+                ->select('la.*', 'v.status_inspektorat')
+                ->where('la.id', $id)
+                ->first();
             
             if (!$laporan) {
                 return redirect()->back()->with('error', 'Laporan tidak ditemukan');
+            }
+
+            if (in_array($laporan->status_inspektorat, ['Disetujui Inspektorat', 'Ditolak Inspektorat'])) {
+                return redirect()->back()->with('error', 'Tidak dapat mengubah verifikasi. Laporan sudah diverifikasi oleh Inspektorat.');
             }
 
             //update verifikasi
@@ -144,7 +154,6 @@ class LaporanAktualController extends Controller
             $statusText = $request->status === 'Disetujui' ? 'disetujui' : 'ditolak';
             $alertType = $request->status === 'Disetujui' ? 'approved' : 'rejected';
             
-            //redirect success message di tab verifikasi
             return redirect()
                 ->route('konflik-aktual.show', [
                     'id' => $id, 
@@ -165,10 +174,18 @@ class LaporanAktualController extends Controller
                 'komentar' => 'required|string',
             ]);
 
-            $laporan = DB::table('laporan_aktual')->where('id', $id)->first();
+            $laporan = DB::table('laporan_aktual as la')
+                ->leftJoin('verifikasi as v', 'la.verifikasi_id', '=', 'v.id')
+                ->select('la.*', 'v.status_inspektorat')
+                ->where('la.id', $id)
+                ->first();
             
             if (!$laporan) {
                 return redirect()->back()->with('error', 'Laporan tidak ditemukan');
+            }
+
+            if (in_array($laporan->status_inspektorat, ['Disetujui Inspektorat', 'Ditolak Inspektorat'])) {
+                return redirect()->back()->with('error', 'Tidak dapat mengubah komentar. Laporan sudah diverifikasi oleh Inspektorat.');
             }
 
             //update komentar di verifikasi
@@ -181,7 +198,6 @@ class LaporanAktualController extends Controller
                     ]);
             }
 
-            //redirect success message di tab verifikasi
             return redirect()
                 ->route('konflik-aktual.show', ['id' => $id, 'success' => 'Komentar berhasil disimpan']);
         } catch (\Exception $e) {

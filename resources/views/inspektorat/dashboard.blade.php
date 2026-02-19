@@ -34,7 +34,7 @@
 </div>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="fw-semibold">Statistik Konflik Kepentingan (Semua Laporan)</h5>
+    <h5 class="fw-semibold">Statistik Konflik Kepentingan</h5>
     <select class="form-select w-auto" id="yearSelector" onchange="updateChart()">
         <option value="2023">2023</option>
         <option value="2024">2024</option>

@@ -95,7 +95,8 @@ class LaporanPotensialController extends Controller
                 'v.rekomendasi as rekomendasi_verifikasi',
                 'v.status_inspektorat as status_inspektorat',
                 'v.tanggal_inspektorat as tanggal_inspektorat',
-                'v.komentar_inspektorat as komentar_inspektorat'
+                'v.komentar_inspektorat as komentar_inspektorat',
+                'v.rekomendasi_inspektorat as rekomendasi_inspektorat'
             )
             ->where('lp.id', $id)
             ->whereIn('lp.status_potensial', ['Disetujui', 'Disetujui Inspektorat', 'Ditolak Inspektorat'])
@@ -206,6 +207,43 @@ class LaporanPotensialController extends Controller
             return redirect()
                 ->back()
                 ->with('error', 'Gagal menyimpan komentar: ' . $e->getMessage());
+        }
+    }
+
+    public function updateRekomendasi(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'rekomendasi' => 'required|string',
+            ]);
+
+            $laporan = DB::table('laporan_potensial')
+                ->where('id', $id)
+                ->whereIn('status_potensial', ['Disetujui', 'Disetujui Inspektorat', 'Ditolak Inspektorat'])
+                ->first();
+            
+            if (!$laporan) {
+                return redirect()->back()->with('error', 'Laporan tidak ditemukan');
+            }
+
+            //rekomendasi inspektorat
+            if ($laporan->verifikasi_id) {
+                DB::table('verifikasi')
+                    ->where('id', $laporan->verifikasi_id)
+                    ->update([
+                        'rekomendasi_inspektorat' => $request->rekomendasi,
+                        'updated_at' => now(),
+                    ]);
+            }
+
+            return redirect()
+                ->route('inspektorat.konflik-potensial.show', ['id' => $id])
+                ->with('success', 'Rekomendasi berhasil disimpan')
+                ->with('type', 'approved');
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Gagal menyimpan rekomendasi: ' . $e->getMessage());
         }
     }
 

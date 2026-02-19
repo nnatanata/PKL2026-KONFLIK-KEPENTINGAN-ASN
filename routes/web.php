@@ -11,14 +11,27 @@ use App\Http\Controllers\Verifikator\LaporanPotensialController;
 use App\Http\Controllers\Verifikator\ProfileController;
 use App\Http\Controllers\Verifikator\DokumenAktualController;
 use App\Http\Controllers\Verifikator\DokumenPotensialController;
+use App\Http\Controllers\Inspektorat\DashboardController as InspektoratDashboardController;
+use App\Http\Controllers\Inspektorat\LaporanAktualController as InspektoratLaporanAktualController;
+use App\Http\Controllers\Inspektorat\LaporanPotensialController as InspektoratLaporanPotensialController;
+use App\Http\Controllers\Inspektorat\ProfileController as InspektoratProfileController;
+use App\Http\Controllers\Inspektorat\DokumenAktualController as InspektoratDokumenAktualController;
+use App\Http\Controllers\Inspektorat\DokumenPotensialController as InspektoratDokumenPotensialController;
 
 /*root
 belum login ke halaman login
 sudah login ke halaman dashboard*/
 Route::get('/', function () {
-    return auth()->check()
-        ? redirect('/dashboard')
-        : redirect('/login');
+    if (auth()->check()) {
+        // Redirect berdasarkan role
+        if (auth()->user()->role === 'inspektorat') {
+            return redirect('/inspektorat/dashboard');
+        } elseif (auth()->user()->role === 'verifikator') {
+            return redirect('/dashboard');
+        }
+        return redirect('/dashboard');
+    }
+    return redirect('/login');
 });
 
 //force logout sementara
@@ -78,52 +91,116 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])
         ->name('logout');
 
-    //dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/api/dashboard/chart-data', [DashboardController::class, 'getChartData'])
-        ->name('dashboard.chart.data');
+    //verifikator
+    Route::middleware('role:verifikator')->group(function () {
+        //dashboard
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/api/dashboard/chart-data', [DashboardController::class, 'getChartData'])
+            ->name('dashboard.chart.data');
 
-    //profil
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+        //profil
+        Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 
-    //konflik Aktual
-    Route::get('/konflik-aktual', [LaporanAktualController::class, 'index'])
-        ->name('konflik-aktual.index');
-    Route::get('/konflik-aktual/{id}', [LaporanAktualController::class, 'show'])
-        ->name('konflik-aktual.show');
-    
-    Route::put('/konflik-aktual/{id}/verifikasi', [LaporanAktualController::class, 'updateVerifikasi'])
-        ->name('konflik-aktual.verifikasi.update');
-    Route::put('/konflik-aktual/{id}/komentar', [LaporanAktualController::class, 'updateKomentar'])
-        ->name('konflik-aktual.komentar.update');
-    
-    Route::delete('/konflik-aktual/{id}', [LaporanAktualController::class, 'destroy'])
-        ->name('konflik-aktual.destroy');
-    
-    //dokumen aktual
-    Route::get('/dokumen-aktual/{id}/download', [DokumenAktualController::class, 'download'])
-        ->name('dokumen-aktual.download');
-    Route::get('/dokumen-aktual/{id}/view', [DokumenAktualController::class, 'view'])
-        ->name('dokumen-aktual.view');
-
-    //konflik Potensial
-    Route::get('/konflik-potensial', [LaporanPotensialController::class, 'index'])
-        ->name('konflik-potensial.index');
-    Route::get('/konflik-potensial/{id}', [LaporanPotensialController::class, 'show'])
-        ->name('konflik-potensial.show');
-    
-    Route::put('/konflik-potensial/{id}/verifikasi', [LaporanPotensialController::class, 'updateVerifikasi'])
-        ->name('konflik-potensial.verifikasi.update');
-    Route::put('/konflik-potensial/{id}/komentar', [LaporanPotensialController::class, 'updateKomentar'])
-        ->name('konflik-potensial.komentar.update');
-    
-    Route::delete('/konflik-potensial/{id}', [LaporanPotensialController::class, 'destroy'])
-        ->name('konflik-potensial.destroy');
-    
-    //dokumen potensial
-    Route::get('/dokumen-potensial/{id}/download', [DokumenPotensialController::class, 'download'])
-        ->name('dokumen-potensial.download');
-    Route::get('/dokumen-potensial/{id}/view', [DokumenPotensialController::class, 'view'])
-        ->name('dokumen-potensial.view');
+        //konflik Aktual
+        Route::get('/konflik-aktual', [LaporanAktualController::class, 'index'])
+            ->name('konflik-aktual.index');
+        Route::get('/konflik-aktual/{id}', [LaporanAktualController::class, 'show'])
+            ->name('konflik-aktual.show');
         
+        Route::put('/konflik-aktual/{id}/verifikasi', [LaporanAktualController::class, 'updateVerifikasi'])
+            ->name('konflik-aktual.verifikasi.update');
+        Route::put('/konflik-aktual/{id}/komentar', [LaporanAktualController::class, 'updateKomentar'])
+            ->name('konflik-aktual.komentar.update');
+        
+        Route::delete('/konflik-aktual/{id}', [LaporanAktualController::class, 'destroy'])
+            ->name('konflik-aktual.destroy');
+        
+        //dokumen aktual
+        Route::get('/dokumen-aktual/{id}/download', [DokumenAktualController::class, 'download'])
+            ->name('dokumen-aktual.download');
+        Route::get('/dokumen-aktual/{id}/view', [DokumenAktualController::class, 'view'])
+            ->name('dokumen-aktual.view');
+
+        //konflik Potensial
+        Route::get('/konflik-potensial', [LaporanPotensialController::class, 'index'])
+            ->name('konflik-potensial.index');
+        Route::get('/konflik-potensial/{id}', [LaporanPotensialController::class, 'show'])
+            ->name('konflik-potensial.show');
+        
+        Route::put('/konflik-potensial/{id}/verifikasi', [LaporanPotensialController::class, 'updateVerifikasi'])
+            ->name('konflik-potensial.verifikasi.update');
+        Route::put('/konflik-potensial/{id}/komentar', [LaporanPotensialController::class, 'updateKomentar'])
+            ->name('konflik-potensial.komentar.update');
+        
+        Route::delete('/konflik-potensial/{id}', [LaporanPotensialController::class, 'destroy'])
+            ->name('konflik-potensial.destroy');
+        
+        //dokumen potensial
+        Route::get('/dokumen-potensial/{id}/download', [DokumenPotensialController::class, 'download'])
+            ->name('dokumen-potensial.download');
+        Route::get('/dokumen-potensial/{id}/view', [DokumenPotensialController::class, 'view'])
+            ->name('dokumen-potensial.view');
+    });
+
+    //inspektorat
+    Route::middleware('role:inspektorat')->prefix('inspektorat')->name('inspektorat.')->group(function () {
+        //dashboard
+        Route::get('/dashboard', [InspektoratDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/api/dashboard/chart-data', [InspektoratDashboardController::class, 'getChartData'])
+            ->name('dashboard.chart.data');
+
+        //profil
+        Route::get('/profile', [InspektoratProfileController::class, 'index'])->name('profile.index');
+
+        //export
+        Route::get('/konflik-aktual/export', [InspektoratLaporanAktualController::class, 'export'])
+            ->name('konflik-aktual.export');
+        Route::get('/konflik-potensial/export', [InspektoratLaporanPotensialController::class, 'export'])
+            ->name('konflik-potensial.export');
+
+        //konflik Aktual
+        Route::get('/konflik-aktual', [InspektoratLaporanAktualController::class, 'index'])
+            ->name('konflik-aktual.index');
+        Route::get('/konflik-aktual/{id}', [InspektoratLaporanAktualController::class, 'show'])
+            ->name('konflik-aktual.show');
+        
+        Route::put('/konflik-aktual/{id}/verifikasi', [InspektoratLaporanAktualController::class, 'updateVerifikasi'])
+            ->name('konflik-aktual.verifikasi.update');
+        Route::put('/konflik-aktual/{id}/komentar', [InspektoratLaporanAktualController::class, 'updateKomentar'])
+            ->name('konflik-aktual.komentar.update');
+        Route::put('/konflik-aktual/{id}/rekomendasi', [InspektoratLaporanAktualController::class, 'updateRekomendasi'])
+            ->name('konflik-aktual.rekomendasi.update'); // ← PASTIKAN INI ADA
+        
+        Route::delete('/konflik-aktual/{id}', [InspektoratLaporanAktualController::class, 'destroy'])
+            ->name('konflik-aktual.destroy');
+        
+        //dokumen aktual
+        Route::get('/dokumen-aktual/{id}/download', [InspektoratDokumenAktualController::class, 'download'])
+            ->name('dokumen-aktual.download');
+        Route::get('/dokumen-aktual/{id}/view', [InspektoratDokumenAktualController::class, 'view'])
+            ->name('dokumen-aktual.view');
+
+        //konflik Potensial
+        Route::get('/konflik-potensial', [InspektoratLaporanPotensialController::class, 'index'])
+            ->name('konflik-potensial.index');
+        Route::get('/konflik-potensial/{id}', [InspektoratLaporanPotensialController::class, 'show'])
+            ->name('konflik-potensial.show');
+        
+        Route::put('/konflik-potensial/{id}/verifikasi', [InspektoratLaporanPotensialController::class, 'updateVerifikasi'])
+            ->name('konflik-potensial.verifikasi.update');
+        Route::put('/konflik-potensial/{id}/komentar', [InspektoratLaporanPotensialController::class, 'updateKomentar'])
+            ->name('konflik-potensial.komentar.update');
+        Route::put('/konflik-potensial/{id}/rekomendasi', [InspektoratLaporanPotensialController::class, 'updateRekomendasi'])
+            ->name('konflik-potensial.rekomendasi.update'); // ← PASTIKAN INI ADA
+        
+        Route::delete('/konflik-potensial/{id}', [InspektoratLaporanPotensialController::class, 'destroy'])
+            ->name('konflik-potensial.destroy');
+        
+        //dokumen potensial
+        Route::get('/dokumen-potensial/{id}/download', [InspektoratDokumenPotensialController::class, 'download'])
+            ->name('dokumen-potensial.download');
+        Route::get('/dokumen-potensial/{id}/view', [InspektoratDokumenPotensialController::class, 'view'])
+            ->name('dokumen-potensial.view');
+
+    });
 });
