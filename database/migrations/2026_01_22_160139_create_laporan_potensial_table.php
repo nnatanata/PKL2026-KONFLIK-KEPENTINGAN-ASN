@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('nama_terduga');
             $table->string('divisi_terduga');
 
+            $table->text('dugaan_konflik')->nullable();
             $table->text('daftar_keluarga')->nullable();
             $table->text('kepemilikan_saham')->nullable();
             $table->text('aset_investasi')->nullable();
