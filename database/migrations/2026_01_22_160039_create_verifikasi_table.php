@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('verifikasi', function (Blueprint $table) {
@@ -19,6 +16,12 @@ return new class extends Migration
             $table->text('komentar')->nullable();
             $table->text('rekomendasi')->nullable();
 
+            //kolom untuk inspektorat
+            $table->string('status_inspektorat')->nullable();
+            $table->date('tanggal_inspektorat')->nullable();
+            $table->text('komentar_inspektorat')->nullable();
+            $table->text('rekomendasi_inspektorat')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
 
@@ -26,12 +29,8 @@ return new class extends Migration
             $table->string('updated_by')->nullable();
             $table->string('deleted_by')->nullable();
         });
-
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('verifikasi');

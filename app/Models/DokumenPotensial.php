@@ -17,6 +17,12 @@ class DokumenPotensial extends Model
         'laporan_potensial_id'
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
+
     public function laporanPotensial()
     {
         return $this->belongsTo(LaporanPotensial::class, 'laporan_potensial_id');
