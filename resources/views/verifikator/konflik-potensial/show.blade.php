@@ -27,10 +27,13 @@
         <button class="tab-nav-item" onclick="switchTab('verifikasi')">
             Verifikasi
         </button>
+        <button class="tab-nav-item" onclick="switchTab('status')">
+            Status Laporan
+        </button>
     </div>
 
     <div class="tab-content-wrapper">
-        <a href="{{ route('konflik-potensial.index') }}" class="btn-back-modern">
+        <a href="{{ route('verifikator.konflik-potensial.index') }}" class="btn-back-modern">
             <i class="bi bi-arrow-left"></i>
             Kembali ke Daftar
         </a>
@@ -48,6 +51,7 @@
         @include('verifikator.konflik-potensial.partials._tab-detail')
         @include('verifikator.konflik-potensial.partials._tab-dokumen')
         @include('verifikator.konflik-potensial.partials._tab-verifikasi')
+        @include('partials._status-tab')
     </div>
 </div>
 

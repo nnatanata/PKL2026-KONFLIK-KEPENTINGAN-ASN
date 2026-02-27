@@ -17,6 +17,8 @@ function switchTab(tabName) {
         navItems[1].classList.add('active');
     } else if (tabName === 'verifikasi') {
         navItems[2].classList.add('active');
+    } else if (tabName === 'status') {
+        navItems[3].classList.add('active');
     }
     
     window.scrollTo({ top: 0, behavior: 'smooth' });

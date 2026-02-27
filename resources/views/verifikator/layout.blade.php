@@ -239,7 +239,7 @@
         <span class="brand-text">SIMAKK ASN</span>
     </div>
 
-    <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+    <a href="{{ route('verifikator.dashboard') }}" class="{{ request()->routeIs('verifikator.dashboard') ? 'active' : '' }}">
         <i class="bi bi-house-door"></i>
         <span class="menu-text">Dashboard</span>
     </a>
@@ -251,13 +251,13 @@
     </a>
 
     <div class="collapse {{ request()->is('konflik-*') ? 'show' : '' }}" id="menuKonflik">
-        <a href="{{ route('konflik-aktual.index') }}" 
-           class="{{ request()->routeIs('konflik-aktual.*') ? 'active' : '' }}">
+        <a href="{{ route('verifikator.konflik-aktual.index') }}" 
+           class="{{ request()->routeIs('verifikator.konflik-aktual.*') ? 'active' : '' }}">
             <i class="bi bi-dot"></i> 
             <span class="menu-text">Konflik Aktual</span>
         </a>
-        <a href="{{ route('konflik-potensial.index') }}" 
-           class="{{ request()->routeIs('konflik-potensial.*') ? 'active' : '' }}">
+        <a href="{{ route('verifikator.konflik-potensial.index') }}" 
+           class="{{ request()->routeIs('verifikator.konflik-potensial.*') ? 'active' : '' }}">
             <i class="bi bi-dot"></i> 
             <span class="menu-text">Konflik Potensial</span>
         </a>
@@ -290,7 +290,7 @@
         </a>
         <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
             <li>
-                <a class="dropdown-item" href="{{ route('profile.index') }}">
+                <a class="dropdown-item" href="{{ route('verifikator.profile.index') }}">
                     <i class="bi bi-person"></i> Profil
                 </a>
             </li>

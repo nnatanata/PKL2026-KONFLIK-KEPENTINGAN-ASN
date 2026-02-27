@@ -18,6 +18,8 @@ function switchTab(tabName) {
         navItems[1].classList.add('active');
     } else if (tabName === 'verifikasi') {
         navItems[2].classList.add('active');
+    } else if (tabName === 'status') {
+        navItems[3].classList.add('active');
     }
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -122,7 +124,7 @@ function viewDocument(docId, filename, fileType) {
     
     modalTitle.textContent = filename;
     
-    downloadBtn.href = `/dokumen-potensial/${docId}/download`;
+    downloadBtn.href = `/verifikator/dokumen-potensial/${docId}/download`;
     
     viewerContent.innerHTML = `
         <div class="loading-spinner">
@@ -133,7 +135,7 @@ function viewDocument(docId, filename, fileType) {
     
     modal.classList.add('active');
     
-    const viewUrl = `/dokumen-potensial/${docId}/view`;
+    const viewUrl = `/verifikator/dokumen-potensial/${docId}/view`;
     const extension = fileType.toLowerCase();
     
     setTimeout(() => {

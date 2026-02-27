@@ -98,13 +98,22 @@ class LaporanAktualController extends Controller
             abort(404, 'Laporan tidak ditemukan atau belum disetujui verifikator');
         }
 
+        // build history timeline
+        $timeline = [];
+        if (!empty($laporan->verifikasi_id)) {
+            $timeline = DB::table('history')
+                ->where('verifikasi_id', $laporan->verifikasi_id)
+                ->orderBy('created_at')
+                ->get();
+        }
+
         $dokumen = DB::table('dokumen_aktual')
             ->where('laporan_aktual_id', $id)
             ->whereNull('deleted_at')
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('inspektorat.konflik-aktual.show', compact('laporan', 'dokumen'));
+        return view('inspektorat.konflik-aktual.show', compact('laporan', 'dokumen', 'timeline'));
     }
 
     public function updateVerifikasi(Request $request, $id)
@@ -140,7 +149,20 @@ class LaporanAktualController extends Controller
                         'status_inspektorat' => $newStatus,
                         'tanggal_inspektorat' => now(),
                         'updated_at' => now(),
+                        'updated_by' => auth()->user()->username ?? 'system'
                     ]);
+            } else {
+                $newId = DB::table('verifikasi')->insertGetId([
+                    'level' => 'inspektorat',
+                    'status_inspektorat' => $newStatus,
+                    'tanggal_inspektorat' => now(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'created_by' => auth()->user()->username ?? 'system',
+                    'updated_by' => auth()->user()->username ?? 'system',
+                ]);
+                DB::table('laporan_aktual')->where('id', $id)
+                    ->update(['verifikasi_id' => $newId]);
             }
 
             $successMessage = $request->status === 'Disetujui' 
@@ -184,7 +206,21 @@ class LaporanAktualController extends Controller
                     ->update([
                         'komentar_inspektorat' => $request->komentar,
                         'updated_at' => now(),
+                        'updated_by' => auth()->user()->username ?? 'system'
                     ]);
+            } else {
+                $newId = DB::table('verifikasi')->insertGetId([
+                    'level' => 'inspektorat',
+                    'status_inspektorat' => null,
+                    'tanggal_inspektorat' => null,
+                    'komentar_inspektorat' => $request->komentar,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'created_by' => auth()->user()->username ?? 'system',
+                    'updated_by' => auth()->user()->username ?? 'system',
+                ]);
+                DB::table('laporan_aktual')->where('id', $id)
+                    ->update(['verifikasi_id' => $newId]);
             }
 
             return redirect()
@@ -221,7 +257,21 @@ class LaporanAktualController extends Controller
                     ->update([
                         'rekomendasi_inspektorat' => $request->rekomendasi,
                         'updated_at' => now(),
+                        'updated_by' => auth()->user()->username ?? 'system'
                     ]);
+            } else {
+                $newId = DB::table('verifikasi')->insertGetId([
+                    'level' => 'inspektorat',
+                    'status_inspektorat' => null,
+                    'tanggal_inspektorat' => null,
+                    'rekomendasi_inspektorat' => $request->rekomendasi,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'created_by' => auth()->user()->username ?? 'system',
+                    'updated_by' => auth()->user()->username ?? 'system',
+                ]);
+                DB::table('laporan_aktual')->where('id', $id)
+                    ->update(['verifikasi_id' => $newId]);
             }
 
             return redirect()

@@ -27,10 +27,15 @@ class Pengguna extends Authenticatable
         'remember_token',
     ];
 
-    public function getAuthIdentifierName()
-    {
-        return 'username';
-    }
+    // When authenticating we still use the "username" field for credentials,
+    // but the identifier name for Auth should remain the primary key so that
+    // Auth::id() returns an integer.  The default value is 'id', so we can
+    // simply remove/override accordingly.
+    //
+    // public function getAuthIdentifierName()
+    // {
+    //     return 'username';
+    // }
 
     public function pegawai()
     {

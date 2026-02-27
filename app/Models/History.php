@@ -12,7 +12,8 @@ class History extends Model
     protected $table = 'history';
 
     protected $fillable = [
-        'verifikasi_id'
+        'verifikasi_id',
+        'event'
     ];
 
     public function verifikasi()

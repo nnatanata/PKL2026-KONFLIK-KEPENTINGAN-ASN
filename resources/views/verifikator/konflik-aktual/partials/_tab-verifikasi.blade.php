@@ -54,7 +54,7 @@
             @endif
         </div>
 
-        <form id="komentarForm" action="{{ route('konflik-aktual.komentar.update', $laporan->id) }}" method="POST">
+        <form id="komentarForm" action="{{ route('verifikator.konflik-aktual.komentar.update', $laporan->id) }}" method="POST">
             @csrf
             @method('PUT')
             
@@ -83,7 +83,7 @@
             </div>
         </form>
 
-        <form id="statusForm" action="{{ route('konflik-aktual.verifikasi.update', $laporan->id) }}" method="POST" style="display: none;">
+        <form id="statusForm" action="{{ route('verifikator.konflik-aktual.verifikasi.update', $laporan->id) }}" method="POST" style="display: none;">
             @csrf
             @method('PUT')
             <input type="hidden" name="status" id="statusInput">

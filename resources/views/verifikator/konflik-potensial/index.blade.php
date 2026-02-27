@@ -33,7 +33,7 @@
 
 @include('verifikator.partials.components.toolbar', [
     'searchPlaceholder' => 'Cari dengan kata kunci Nama Pelapor, Dugaan Konflik, atau Nama Terduga...',
-    'routeName' => 'konflik-potensial',
+    'routeName' => 'verifikator.konflik-potensial',
     'sortByDate' => 'lp.tanggal_potensial'
 ])
 
@@ -59,7 +59,7 @@
 
             <tbody>
                 @forelse($laporan as $item)
-                <tr onclick="window.location='{{ route('konflik-potensial.show', $item->id) }}'">
+                <tr onclick="window.location='{{ route('verifikator.konflik-potensial.show', $item->id) }}'">
                     <td class="text-center">
                         <div class="id-cell d-inline-block">
                             <span class="id-display">
@@ -97,20 +97,23 @@
                                     <i class="bi bi-x-circle-fill me-1"></i>Ditolak Inspektorat
                                 </span>
                             @else
-                                @if($item->status_potensial == 'Disetujui')
+                                @php
+                                    $verStatus = $item->status_verifikasi ?? 'Diproses';
+                                @endphp
+                                @if($verStatus == 'Disetujui')
                                     <span class="badge-status status-disetujui">Disetujui</span>
-                                @elseif($item->status_potensial == 'Diproses')
+                                @elseif($verStatus == 'Diproses')
                                     <span class="badge-status status-diproses">Diproses</span>
-                                @elseif($item->status_potensial == 'Ditolak')
+                                @elseif($verStatus == 'Ditolak')
                                     <span class="badge-status status-ditolak">Ditolak</span>
                                 @else
-                                    <span class="badge-status">{{ $item->status_potensial }}</span>
+                                    <span class="badge-status">{{ $verStatus }}</span>
                                 @endif
                             @endif
                         </div>
                     </td>
                     <td class="text-center" onclick="event.stopPropagation()">
-                        <a href="{{ route('konflik-potensial.show', $item->id) }}" 
+                        <a href="{{ route('verifikator.konflik-potensial.show', $item->id) }}" 
                         class="btn btn-sm btn-action btn-outline-primary" 
                         title="Detail">
                             <i class="bi bi-eye"></i>

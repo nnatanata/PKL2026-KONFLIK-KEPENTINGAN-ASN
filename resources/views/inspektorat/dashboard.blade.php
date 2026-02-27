@@ -36,10 +36,10 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="fw-semibold">Statistik Konflik Kepentingan</h5>
     <select class="form-select w-auto" id="yearSelector" onchange="updateChart()">
-        <option value="2023">2023</option>
-        <option value="2024">2024</option>
-        <option value="2025">2025</option>
-        <option value="2026" selected>2026</option>
+        @php $currentYear = date('Y'); @endphp
+        @for($y = $currentYear - 3; $y <= $currentYear; $y++)
+            <option value="{{ $y }}" {{ $y == $currentYear ? 'selected' : '' }}>{{ $y }}</option>
+        @endfor
     </select>
 </div>
 

@@ -25,13 +25,22 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            //redirect sesuai role
+            // redirect sesuai role
             $user = Auth::user();
-            
+
+            // simpan riwayat kunjungan untuk role "inspektorat" dan "verifikator"
+            // agar mereka tidak melihat landing page lagi setelah pertama kali login
+            if (in_array($user->role, ['inspektorat', 'verifikator'])) {
+                session([
+                    'ever_logged_in' => true,
+                    'last_role' => $user->role,
+                ]);
+            }
+
             if ($user->role === 'inspektorat') {
                 return redirect()->intended('/inspektorat/dashboard');
             } elseif ($user->role === 'verifikator') {
-                return redirect()->intended('/dashboard');
+                return redirect()->intended('/verifikator/dashboard');
             }
             return redirect()->intended('/dashboard');
         }

@@ -14,7 +14,7 @@
         <div class="bg-white rounded-4 shadow-sm p-4">
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <h5 class="fw-bold mb-0">Informasi Profil</h5>
-                <a href="{{ route('dashboard') }}" class="btn btn-sm btn-secondary">
+                <a href="{{ route('verifikator.dashboard') }}" class="btn btn-sm btn-secondary">
                     <i class="bi bi-arrow-left"></i> Kembali
                 </a>
             </div>

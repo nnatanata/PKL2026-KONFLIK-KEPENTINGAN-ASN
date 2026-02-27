@@ -28,7 +28,8 @@ class LaporanAktualController extends Controller
                 'peg.nama as nama_pelapor',
                 'peg.nip as nip_pelapor',
                 'p.username as username_pelapor',
-                'v.status_inspektorat'
+                'v.status_inspektorat',
+                'v.status as status_verifikasi'
             )
             ->whereNull('la.deleted_at');
 
@@ -101,6 +102,15 @@ class LaporanAktualController extends Controller
             abort(404, 'Laporan tidak ditemukan');
         }
 
+        // build history timeline
+        $timeline = [];
+        if (!empty($laporan->verifikasi_id)) {
+            $timeline = DB::table('history')
+                ->where('verifikasi_id', $laporan->verifikasi_id)
+                ->orderBy('created_at')
+                ->get();
+        }
+
         //filter soft deleted dokumen
         $dokumen = DB::table('dokumen_aktual')
             ->where('laporan_aktual_id', $id)
@@ -108,7 +118,7 @@ class LaporanAktualController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('verifikator.konflik-aktual.show', compact('laporan', 'dokumen'));
+        return view('verifikator.konflik-aktual.show', compact('laporan', 'dokumen', 'timeline'));
     }
 
     public function updateVerifikasi(Request $request, $id)
@@ -132,22 +142,56 @@ class LaporanAktualController extends Controller
                 return redirect()->back()->with('error', 'Tidak dapat mengubah verifikasi. Laporan sudah diverifikasi oleh Inspektorat.');
             }
 
-            //update verifikasi
-            if ($laporan->verifikasi_id) {
-                DB::table('verifikasi')
-                    ->where('id', $laporan->verifikasi_id)
-                    ->update([
-                        'status' => $request->status,
-                        'tanggal' => now(),
-                        'updated_at' => now(),
-                    ]);
-            }
+        $verifikasiId = $laporan->verifikasi_id;
+        if ($laporan->verifikasi_id) {
+            DB::table('verifikasi')
+                ->where('id', $laporan->verifikasi_id)
+                ->update([
+                    'status' => $request->status,
+                    'tanggal' => now(),
+                    'updated_at' => now(),
+                    'updated_by' => auth()->user()->username ?? 'system'
+                ]);
+            $verifikasiId = $laporan->verifikasi_id;
+        } else {
+            //create new verifikasi and attach to laporan
+            $newId = DB::table('verifikasi')->insertGetId([
+                'level' => 'verifikator',
+                'status' => $request->status,
+                'tanggal' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+                'created_by' => auth()->user()->username ?? 'system',
+                'updated_by' => auth()->user()->username ?? 'system',
+            ]);
+            DB::table('laporan_aktual')
+                ->where('id', $id)
+                ->update(['verifikasi_id' => $newId]);
+            $verifikasiId = $newId;
 
-            //update status laporan
+            // record beginning of verifikator processing
+            DB::table('history')->insert([
+                'verifikasi_id' => $newId,
+                'event' => 'Diproses Verifikator',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+            //record decision event
+            $decisionEvent = $request->status === 'Disetujui' ? 'Diterima Verifikator' : 'Ditolak Verifikator';
+            DB::table('history')->insert([
+                'verifikasi_id' => $verifikasiId,
+                'event' => $decisionEvent,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            //keep laporan status as Diproses until inspektorat decision
             DB::table('laporan_aktual')
                 ->where('id', $id)
                 ->update([
-                    'status_aktual' => $request->status,
+                    'status_aktual' => 'Diproses',
                     'updated_at' => now(),
                 ]);
 
@@ -155,11 +199,9 @@ class LaporanAktualController extends Controller
             $alertType = $request->status === 'Disetujui' ? 'approved' : 'rejected';
             
             return redirect()
-                ->route('konflik-aktual.show', [
-                    'id' => $id, 
-                    'success' => "Laporan berhasil {$statusText}",
-                    'type' => $alertType
-                ]);
+                ->route('verifikator.konflik-aktual.show', ['id' => $id])
+                ->with('success', "Laporan berhasil {$statusText}")
+                ->with('type', $alertType);
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -188,18 +230,50 @@ class LaporanAktualController extends Controller
                 return redirect()->back()->with('error', 'Tidak dapat mengubah komentar. Laporan sudah diverifikasi oleh Inspektorat.');
             }
 
-            //update komentar di verifikasi
+            //update or create komentar in verifikasi
             if ($laporan->verifikasi_id) {
                 DB::table('verifikasi')
                     ->where('id', $laporan->verifikasi_id)
                     ->update([
                         'komentar' => $request->komentar,
                         'updated_at' => now(),
+                        'updated_by' => auth()->user()->username ?? 'system'
                     ]);
+
+                // optional: record comment event
+                DB::table('history')->insert([
+                    'verifikasi_id' => $laporan->verifikasi_id,
+                    'event' => 'Komentar Verifikator',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                //no verifikasi yet, create one with komentar
+                $newId = DB::table('verifikasi')->insertGetId([
+                    'level' => 'verifikator',
+                    'status' => 'Diproses',
+                    'tanggal' => now(),
+                    'komentar' => $request->komentar,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'created_by' => auth()->user()->username ?? 'system',
+                    'updated_by' => auth()->user()->username ?? 'system',
+                ]);
+                DB::table('laporan_aktual')->where('id', $id)
+                    ->update(['verifikasi_id' => $newId]);
+
+                // record initial processing event
+                DB::table('history')->insert([
+                    'verifikasi_id' => $newId,
+                    'event' => 'Diproses Verifikator',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
             }
 
             return redirect()
-                ->route('konflik-aktual.show', ['id' => $id, 'success' => 'Komentar berhasil disimpan']);
+                ->route('verifikator.konflik-aktual.show', ['id' => $id])
+                ->with('success', 'Komentar berhasil disimpan');
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -218,11 +292,11 @@ class LaporanAktualController extends Controller
                 ]);
 
             return redirect()
-                ->route('konflik-aktual.index')
+                ->route('verifikator.konflik-aktual.index')
                 ->with('success', 'Laporan berhasil dihapus');
         } catch (\Exception $e) {
             return redirect()
-                ->route('konflik-aktual.index')
+                ->route('verifikator.konflik-aktual.index')
                 ->with('error', 'Gagal menghapus laporan: ' . $e->getMessage());
         }
     }

@@ -26,6 +26,9 @@
         <button class="tab-nav-item" onclick="switchTab('verifikasi')">
             Verifikasi
         </button>
+        <button class="tab-nav-item" onclick="switchTab('status')">
+            Status Laporan
+        </button>
     </div>
 
     <div class="tab-content-wrapper">
@@ -48,6 +51,7 @@
         @include('inspektorat.konflik-aktual.partials._tab-detail')
         @include('inspektorat.konflik-aktual.partials._tab-dokumen')
         @include('inspektorat.konflik-aktual.partials._tab-verifikasi')
+        @include('partials._status-tab')
     </div>
 </div>
 

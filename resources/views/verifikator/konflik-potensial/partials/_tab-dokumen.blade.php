@@ -53,7 +53,7 @@
                         <i class="bi bi-eye"></i>
                         <span>Lihat</span>
                     </button>
-                    <a href="{{ route('dokumen-potensial.download', $doc->id) }}" 
+                    <a href="{{ route('verifikator.dokumen-potensial.download', $doc->id) }}" 
                        class="btn-doc-action btn-download" 
                        title="Download Dokumen">
                         <i class="bi bi-download"></i>

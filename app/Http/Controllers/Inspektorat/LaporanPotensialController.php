@@ -106,6 +106,15 @@ class LaporanPotensialController extends Controller
             abort(404, 'Laporan tidak ditemukan atau belum disetujui verifikator');
         }
 
+        // build history timeline
+        $timeline = [];
+        if (!empty($laporan->verifikasi_id)) {
+            $timeline = DB::table('history')
+                ->where('verifikasi_id', $laporan->verifikasi_id)
+                ->orderBy('created_at')
+                ->get();
+        }
+
         if (!$laporan->nama_terduga_lengkap) {
             $laporan->nama_terduga_lengkap = $laporan->nama_terduga;
         }
@@ -116,7 +125,7 @@ class LaporanPotensialController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('inspektorat.konflik-potensial.show', compact('laporan', 'dokumen'));
+        return view('inspektorat.konflik-potensial.show', compact('laporan', 'dokumen', 'timeline'));
     }
 
     public function updateVerifikasi(Request $request, $id)

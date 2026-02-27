@@ -6,6 +6,15 @@
                 <h3>Verifikasi Inspektorat</h3>
             </div>
             
+            @if(!empty($laporan->komentar_verifikasi))
+                <div class="section-header mt-3">
+                    <h5>Komentar Verifikator</h5>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-textarea-modern" rows="4" readonly>{{ $laporan->komentar_verifikasi }}</textarea>
+                </div>
+            @endif
+            
             <div class="verification-buttons">
                 <button type="button" 
                         class="btn-verify btn-approve" 

@@ -436,6 +436,15 @@
         box-shadow: var(--shadow-md);
     }
 
+    /* status timeline */
+    .status-timeline{display:flex;justify-content:space-between;position:relative;margin:32px 0;padding:0 20px;}
+    .status-timeline::before{content:'';position:absolute;top:50%;left:20px;right:20px;height:4px;background:#e0e0e0;transform:translateY(-50%);z-index:1;}
+    .status-item{position:relative;text-align:center;flex:1;}
+    .status-item .circle{width:32px;height:32px;border-radius:50%;background:#e0e0e0;margin:0 auto;display:flex;align-items:center;justify-content:center;transition:background 0.3s;color:transparent;}
+    .status-item.active .circle{background:#28a745;color:#fff;}
+    .status-item .label{margin-top:8px;font-size:13px;font-weight:600;}
+    .status-item .time{font-size:11px;color:#666;margin-top:4px;}
+
     @media (max-width: 768px) {
         .verification-buttons {
             grid-template-columns: 1fr;
