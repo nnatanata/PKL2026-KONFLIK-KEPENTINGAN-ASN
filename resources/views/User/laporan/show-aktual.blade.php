@@ -71,15 +71,13 @@
     <input class="form-control" readonly value="{{ $laporan->status_aktual }}">
 </div>
 
-@if(isset($timeline))
-    @include('partials._status-timeline', ['laporan' => $laporan, 'timeline' => $timeline])
-@endif
-
 @if($laporan->verifikasi && $laporan->verifikasi->status_inspektorat)
-<div class="mb-3">
-    <label class="form-label">Status Inspektorat</label>
-    <input class="form-control" readonly value="{{ $laporan->verifikasi->status_inspektorat }}">
-</div>
+    @if($laporan->verifikasi->rekomendasi_inspektorat)
+    <div class="mb-3">
+        <label class="form-label">Rekomendasi Inspektorat</label>
+        <textarea class="form-control" rows="3" readonly>{{ $laporan->verifikasi->rekomendasi_inspektorat }}</textarea>
+    </div>
+    @endif
 @endif
 
 <hr>

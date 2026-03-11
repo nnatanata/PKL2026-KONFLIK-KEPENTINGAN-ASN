@@ -186,9 +186,9 @@
             <div id="status2" class="accordion-collapse collapse">
                 <div class="accordion-body">
                     <ul>
-                        <li><strong>Diproses</strong> – Laporan baru dikirim oleh pengguna dan ditinjau oleh verifikator dan inspektorat</li>
-                        <li><strong>Diterima</strong> – Proses peninjauan telah selesai dan laporan konflik diterima oleh verifikator dan inspektorat</li>
-                        <li><strong>Ditolak</strong> – Proses peninjauan telah selesai dan laporan konflik ditolak oleh verifikator atau inspektorat</li>
+                        <li><strong>Diproses</strong> : Laporan baru dikirim oleh pengguna dan ditinjau oleh verifikator dan inspektorat</li>
+                        <li><strong>Diterima</strong> : Proses peninjauan telah selesai dan laporan konflik diterima oleh verifikator dan inspektorat</li>
+                        <li><strong>Ditolak</strong>  : Proses peninjauan telah selesai dan laporan konflik ditolak oleh verifikator atau inspektorat</li>
                     </ul>
                 </div>
             </div>

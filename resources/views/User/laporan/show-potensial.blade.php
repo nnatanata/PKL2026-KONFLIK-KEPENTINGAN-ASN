@@ -108,52 +108,13 @@
     <input class="form-control" readonly value="{{ $laporan->status_potensial }}">
 </div>
 
-@if(isset($timeline))
-    @include('partials._status-timeline', ['laporan' => $laporan, 'timeline' => $timeline])
-@endif
-
-@if($laporan->verifikasi)
-    @if($laporan->verifikasi->status)
-    <div class="mb-3">
-        <label class="form-label">Keputusan Verifikator</label>
-        <input class="form-control" readonly value="{{ $laporan->verifikasi->status }}">
-    </div>
-    @endif
-
-    @if($laporan->verifikasi->komentar)
-    <div class="mb-3">
-        <label class="form-label">Komentar Verifikator</label>
-        <textarea class="form-control" rows="3" readonly>{{ $laporan->verifikasi->komentar }}</textarea>
-    </div>
-    @endif
-
-    @if($laporan->verifikasi->status_inspektorat)
-    <div class="mb-3">
-        <label class="form-label">Keputusan Inspektorat</label>
-        <input class="form-control" readonly value="{{ $laporan->verifikasi->status_inspektorat }}">
-    </div>
-    @endif
-
-    @if($laporan->verifikasi->komentar_inspektorat)
-    <div class="mb-3">
-        <label class="form-label">Komentar Inspektorat</label>
-        <textarea class="form-control" rows="3" readonly>{{ $laporan->verifikasi->komentar_inspektorat }}</textarea>
-    </div>
-    @endif
-
+@if($laporan->verifikasi && $laporan->verifikasi->status_inspektorat)
     @if($laporan->verifikasi->rekomendasi_inspektorat)
     <div class="mb-3">
         <label class="form-label">Rekomendasi Inspektorat</label>
         <textarea class="form-control" rows="3" readonly>{{ $laporan->verifikasi->rekomendasi_inspektorat }}</textarea>
     </div>
     @endif
-@endif
-
-@if($laporan->verifikasi && $laporan->verifikasi->status_inspektorat)
-<div class="mb-3">
-    <label class="form-label">Status Inspektorat</label>
-    <input class="form-control" readonly value="{{ $laporan->verifikasi->status_inspektorat }}">
-</div>
 @endif
 
 <hr>
