@@ -187,11 +187,10 @@ class LaporanAktualController extends Controller
                 'updated_at' => now(),
             ]);
 
-            //keep laporan status as Diproses until inspektorat decision
             DB::table('laporan_aktual')
                 ->where('id', $id)
                 ->update([
-                    'status_aktual' => 'Diproses',
+                    'status_aktual' => $request->status,
                     'updated_at' => now(),
                 ]);
 

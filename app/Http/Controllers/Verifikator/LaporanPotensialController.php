@@ -207,11 +207,10 @@ class LaporanPotensialController extends Controller
                 'updated_at' => now(),
             ]);
 
-            //keep laporan status as Diproses until inspektorat decision
             DB::table('laporan_potensial')
                 ->where('id', $id)
                 ->update([
-                    'status_potensial' => 'Diproses',
+                    'status_potensial' => $request->status,
                     'updated_at' => now(),
                 ]);
 
