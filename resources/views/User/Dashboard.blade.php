@@ -21,7 +21,7 @@
             <div class="stat-number stat-diterima">
                 {{ $diterima }}
             </div>
-            Disetujui Inspektorat
+            Disetujui
         </div>
     </div>
 
